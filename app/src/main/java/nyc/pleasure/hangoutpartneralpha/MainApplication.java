@@ -8,7 +8,7 @@ import com.firebase.client.Firebase;
 /**
  * Created by Chien on 12/20/2015.
  */
-public class LoginApplication  extends Application {
+public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

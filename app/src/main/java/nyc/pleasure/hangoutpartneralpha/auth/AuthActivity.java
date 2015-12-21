@@ -40,11 +40,11 @@ import nyc.pleasure.hangoutpartneralpha.R;
 /**
  * Created by Chien on 12/20/2015.
  */
-public class LoginActivity  extends AppCompatActivity implements
+public class AuthActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = AuthActivity.class.getSimpleName();
 
     /* *************************************
      *              GENERAL                *
@@ -119,7 +119,7 @@ public class LoginActivity  extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /* Load the view and display it */
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_auth);
 
         /* *************************************
          *              FACEBOOK               *
@@ -272,7 +272,7 @@ public class LoginActivity  extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         /* If a user is currently authenticated, display a logout menu */
         if (this.mAuthData != null) {
-            getMenuInflater().inflate(R.menu.menu_login, menu);
+            getMenuInflater().inflate(R.menu.menu_auth, menu);
             return true;
         } else {
             return false;
@@ -459,7 +459,7 @@ public class LoginActivity  extends AppCompatActivity implements
                 try {
                     String scope = String.format("oauth2:%s", Scopes.PLUS_LOGIN);
                     String accName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-                    token = GoogleAuthUtil.getToken(LoginActivity.this, accName, scope);
+                    token = GoogleAuthUtil.getToken(AuthActivity.this, accName, scope);
                 } catch (IOException transientEx) {
                     /* Network or server error */
                     Log.e(TAG, "Error authenticating with Google: " + transientEx);
