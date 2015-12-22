@@ -3,10 +3,11 @@ package nyc.pleasure.hangoutpartneralpha.obj;
 /**
  * Created by Chien on 12/21/2015.
  */
-public class Event {
+public class FunEvent {
 
     private String eventId = null;
-    private String userId = null;
+    private String createrUserId = null;
+    private Long createdTime = null;
     private String title = null;
     private String detail = null;
     private Long startTime = null;
@@ -24,12 +25,20 @@ public class Event {
         this.eventId = eventId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCreaterUserId() {
+        return createrUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCreaterUserId(String createrUserId) {
+        this.createrUserId = createrUserId;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
     }
 
     public String getTitle() {

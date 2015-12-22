@@ -20,8 +20,11 @@ import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -401,12 +404,33 @@ public class AuthActivity extends AppCompatActivity implements
             mAuthProgressDialog.hide();
             Log.i(TAG, provider + " auth successful");
             setAuthenticatedUser(authData);
+
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("provider", authData.getProvider());
+            if(authData.getProviderData().containsKey("displayName")) {
+                map.put("displayName", authData.getProviderData().get("displayName").toString());
+            }
+            mFirebaseRef.child("user_access").child(authData.getUid()).setValue(map);
+
         }
 
         @Override
         public void onAuthenticationError(FirebaseError firebaseError) {
             mAuthProgressDialog.hide();
             showErrorDialog(firebaseError.toString());
+
+            switch (firebaseError.getCode()) {
+                case FirebaseError.USER_DOES_NOT_EXIST:
+                    // handle a non existing user
+                    break;
+                case FirebaseError.INVALID_PASSWORD:
+                    // handle an invalid password
+                    break;
+                default:
+                    // handle other errors
+                    break;
+            }
+
         }
     }
 
