@@ -82,10 +82,11 @@ public class ChatActivityFragment extends Fragment {
 
         parentActivity = this.getActivity();
 
-        // Tell our list adapter that we only want 50 messages at a time
-        mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), parentActivity, R.layout.fragment_chat, mUsername);
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         mListView = (ListView) rootView.findViewById(R.id.list_view_chat);
+
+        // Tell our list adapter that we only want 50 messages at a time
+        mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), parentActivity, R.layout.list_item_chat, mUsername);
 
         mListView.setAdapter(mChatListAdapter);
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
