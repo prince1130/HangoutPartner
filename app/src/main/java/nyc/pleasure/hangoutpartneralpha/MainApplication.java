@@ -14,6 +14,6 @@ public class MainApplication extends Application {
         super.onCreate();
         Firebase.setAndroidContext(this);
         FacebookSdk.sdkInitialize(this);
-        Firebase.getDefaultConfig().setPersistenceEnabled(true);
+//        Firebase.getDefaultConfig().setPersistenceEnabled(true);
     }
 }

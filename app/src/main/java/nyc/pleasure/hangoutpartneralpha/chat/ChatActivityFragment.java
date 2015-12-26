@@ -128,15 +128,6 @@ public class ChatActivityFragment extends Fragment {
 
 
 
-
-    private void test() {
-        super.onCreate(null);
-        super.onCreateView(null, null, null);
-        super.onStart();
-        super.onStop();
-        super.onDestroy();
-    }
-
     private void setupUsername() {
         SharedPreferences prefs = this.getActivity().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);

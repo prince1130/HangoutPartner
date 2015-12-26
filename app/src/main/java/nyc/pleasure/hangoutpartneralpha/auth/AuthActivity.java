@@ -2,8 +2,10 @@ package nyc.pleasure.hangoutpartneralpha.auth;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -38,6 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
 
 /**
@@ -117,6 +121,14 @@ public class AuthActivity extends AppCompatActivity implements
      *            ANONYMOUSLY              *
      ***************************************/
     private Button mAnonymousLoginButton;
+
+    /* *************************************
+     *            LOGOUT              *
+     ***************************************/
+    private LinearLayout mLogoutSection;
+    private Button mLogoutConfirmButton;
+    private Button mLogoutCancelButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +215,30 @@ public class AuthActivity extends AppCompatActivity implements
         });
 
         /* *************************************
+         *              LOGOUT            *
+         ***************************************/
+
+        mLogoutSection = (LinearLayout) findViewById(R.id.section_logout);
+
+        mLogoutConfirmButton = (Button) findViewById(R.id.buttonLogoutConfirm);
+        mLogoutConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logoutConfirm();
+            }
+        });
+
+        mLogoutCancelButton = (Button) findViewById(R.id.buttonLogoutCancel);
+        mLogoutCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logoutCancel();
+            }
+        });
+
+
+
+        /* *************************************
          *               GENERAL               *
          ***************************************/
         mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
@@ -228,6 +264,20 @@ public class AuthActivity extends AppCompatActivity implements
          * user and hide hide any login buttons */
         mFirebaseRef.addAuthStateListener(mAuthStateListener);
     }
+
+/*
+    public void onStart() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        Boolean defaultValue = true;
+        Boolean doingLogin = sharedPref.getBoolean(getString(R.string.preference_login_action), defaultValue);
+        if(!doingLogin) {
+            logout();
+            this.goBackToMain();
+        }
+        super.onStart();
+    }
+*/
+
 
     @Override
     protected void onDestroy() {
@@ -270,10 +320,13 @@ public class AuthActivity extends AppCompatActivity implements
             mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
+/*
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* If a user is currently authenticated, display a logout menu */
+        */
+/* If a user is currently authenticated, display a logout menu *//*
+
         if (this.mAuthData != null) {
             getMenuInflater().inflate(R.menu.menu_auth, menu);
             return true;
@@ -291,6 +344,8 @@ public class AuthActivity extends AppCompatActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
+
+*/
 
     /**
      * Unauthenticate from Firebase and from providers where necessary.
@@ -335,19 +390,66 @@ public class AuthActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Once a user is logged in, take the mAuthData provided from Firebase and "use" it.
-     */
     private void setAuthenticatedUser(AuthData authData) {
+        String name = null;
+
         if (authData != null) {
-            /* Hide all the login buttons */
+            //// Just Logged In.
+            //* Hide all the login buttons *//*
+            mFacebookLoginButton.setVisibility(View.GONE);
+            mGoogleLoginButton.setVisibility(View.GONE);
+            mTwitterLoginButton.setVisibility(View.GONE);
+            mPasswordLoginButton.setVisibility(View.GONE);
+            mAnonymousLoginButton.setVisibility(View.GONE);
+            mLogoutSection.setVisibility(View.VISIBLE);
+
+            if (authData.getProvider().equals("facebook")
+                    || authData.getProvider().equals("google")
+                    || authData.getProvider().equals("twitter")) {
+                name = (String) authData.getProviderData().get("displayName");
+            } else if (authData.getProvider().equals("anonymous")
+                    || authData.getProvider().equals("password")) {
+                name = authData.getUid();
+            } else {
+                Log.e(TAG, "Invalid provider: " + authData.getProvider());
+            }
+        } else {
+            //// Just LoggedOut
+            //* No authenticated user show all the login buttons *//*
+            mFacebookLoginButton.setVisibility(View.VISIBLE);
+            mGoogleLoginButton.setVisibility(View.VISIBLE);
+            mTwitterLoginButton.setVisibility(View.VISIBLE);
+            mPasswordLoginButton.setVisibility(View.VISIBLE);
+            mAnonymousLoginButton.setVisibility(View.VISIBLE);
+            mLogoutSection.setVisibility(View.GONE);
+        }
+
+        this.mAuthData = authData;
+        /* invalidate options menu to hide/show the logout button */
+//        supportInvalidateOptionsMenu();
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.preference_user_name), name);
+        editor.commit();
+
+    }
+
+
+    /*
+    *//**
+     * Once a user is logged in, take the mAuthData provided from Firebase and "use" it.
+     *//*
+    private void setAuthenticatedUser2(AuthData authData) {
+        if (authData != null) {
+            *//* Hide all the login buttons *//*
             mFacebookLoginButton.setVisibility(View.GONE);
             mGoogleLoginButton.setVisibility(View.GONE);
             mTwitterLoginButton.setVisibility(View.GONE);
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
-            /* show a provider specific status text */
+            *//* show a provider specific status text *//*
             String name = null;
             if (authData.getProvider().equals("facebook")
                     || authData.getProvider().equals("google")
@@ -363,7 +465,7 @@ public class AuthActivity extends AppCompatActivity implements
                 mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
             }
         } else {
-            /* No authenticated user show all the login buttons */
+            *//* No authenticated user show all the login buttons *//*
             mFacebookLoginButton.setVisibility(View.VISIBLE);
             mGoogleLoginButton.setVisibility(View.VISIBLE);
             mTwitterLoginButton.setVisibility(View.VISIBLE);
@@ -372,9 +474,11 @@ public class AuthActivity extends AppCompatActivity implements
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
         this.mAuthData = authData;
-        /* invalidate options menu to hide/show the logout button */
+        *//* invalidate options menu to hide/show the logout button *//*
         supportInvalidateOptionsMenu();
     }
+
+    */
 
     /**
      * Show errors to users
@@ -553,7 +657,7 @@ public class AuthActivity extends AppCompatActivity implements
      **************************************
      */
     private void loginWithTwitter() {
-//        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
+        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
     }
 
     /* ************************************
@@ -573,4 +677,16 @@ public class AuthActivity extends AppCompatActivity implements
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
     }
+
+
+    private void logoutConfirm() {
+        logout();
+    }
+
+    private void logoutCancel() {
+        Intent afterAuthenticatedIntent = new Intent(this, MainActivity.class);
+        startActivity(afterAuthenticatedIntent);
+    }
+
+
 }
