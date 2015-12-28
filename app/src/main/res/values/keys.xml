@@ -15,6 +15,5 @@
 
     <string name="preference_file_key">nyc.pleasure.hangout</string>
     <string name="preference_user_name">UserName</string>
-    <string name="preference_login_action">LoginAction</string>
 
 </resources>

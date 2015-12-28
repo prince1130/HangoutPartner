@@ -17,9 +17,9 @@ public class EventProvider extends ContentProvider {
     private EventDbHelper mOpenHelper;
 
     static final int EVENT_ALL = 100;
-    static final int EVENT_WITH_ID = 101;
-    static final int EVENT_WITH_USER_ID = 102;
-    static final int USER_WITH_ID = 201;
+    static final int EVENT_AFTER_TIME = 101;
+    static final int EVENT_AFTER_TIME_AND_USER = 102;
+    static final int USER_ALL = 201;
 
     private static final SQLiteQueryBuilder sEventByUserIdQueryBuilder = new SQLiteQueryBuilder();
     static {
@@ -36,8 +36,12 @@ public class EventProvider extends ContentProvider {
 
 
     //location.location_setting = ?
-    private static final String sUserIdSelection =
-            EventContract.UserEntry.TABLE_NAME + "." + EventContract.UserEntry.COLUMN_USER_ID + " = ? ";
+    private static final String sEventAfterTimeSelection =
+            EventContract.EventEntry.TABLE_NAME + "." + EventContract.EventEntry.COLUMN_START_TIME + " > ? ";
+
+    private static final String sEventAfterTimeAndUserSelection =
+            EventContract.EventEntry.TABLE_NAME + "." + EventContract.EventEntry.COLUMN_START_TIME + " > ? AND "
+                    + EventContract.UserEntry.TABLE_NAME + "." +  EventContract.UserEntry.COLUMN_USER_ID + " = ? " ;
 
     @Override
     public boolean onCreate() {
@@ -52,12 +56,12 @@ public class EventProvider extends ContentProvider {
 
         switch (match) {
             case EVENT_ALL:
-                return EventContract.EventEntry.CONTENT_TYPE;
-            case EVENT_WITH_ID:
                 return EventContract.EventEntry.CONTENT_ITEM_TYPE;
-            case EVENT_WITH_USER_ID:
+            case EVENT_AFTER_TIME:
                 return EventContract.EventEntry.CONTENT_TYPE;
-            case USER_WITH_ID:
+            case EVENT_AFTER_TIME_AND_USER:
+                return EventContract.EventEntry.CONTENT_TYPE;
+            case USER_ALL:
                 return EventContract.UserEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -72,7 +76,7 @@ public class EventProvider extends ContentProvider {
         Uri returnUri = null;
 
         switch (match) {
-            case EVENT_WITH_ID: {
+            case EVENT_ALL: {
                 long _id = db.insert(EventContract.EventEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EventContract.EventEntry.buildEventUri(_id);
@@ -80,7 +84,7 @@ public class EventProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case USER_WITH_ID: {
+            case USER_ALL: {
                 long _id = db.insert(EventContract.UserEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EventContract.UserEntry.buildUserUri(_id);
@@ -103,10 +107,10 @@ public class EventProvider extends ContentProvider {
         int rowsUpdated;
 
         switch (match) {
-            case EVENT_WITH_ID:
+            case EVENT_ALL:
                 rowsUpdated = db.update(EventContract.EventEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case USER_WITH_ID:
+            case USER_ALL:
                 rowsUpdated = db.update(EventContract.UserEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
@@ -127,10 +131,10 @@ public class EventProvider extends ContentProvider {
         // this makes delete all rows return the number of rows deleted
         if ( null == selection ) selection = "1";
         switch (match) {
-            case EVENT_WITH_ID:
+            case EVENT_ALL:
                 rowsDeleted = db.delete(EventContract.EventEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case USER_WITH_ID:
+            case USER_ALL:
                 rowsDeleted = db.delete(EventContract.UserEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
@@ -148,19 +152,6 @@ public class EventProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "event specific/*/*"
-            case EVENT_WITH_ID: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        EventContract.EventEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
             // "event all"
             case EVENT_ALL: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -174,14 +165,19 @@ public class EventProvider extends ContentProvider {
                 );
                 break;
             }
-            // "event all"
-            case EVENT_WITH_USER_ID : {
-                retCursor = getEventByUserId(uri, projection, sortOrder);
+            // "event that happen after certain date /*/*"
+            case EVENT_AFTER_TIME: {
+                retCursor = getEventAfterTime(uri, projection, sortOrder);
+                break;
+            }
+            // "event that created by certain user and happen after certain time "
+            case EVENT_AFTER_TIME_AND_USER : {
+                retCursor = getEventAfterTimeAndUser(uri, projection, sortOrder);
                 break;
             }
 
             // "user specific/*"
-            case USER_WITH_ID: {
+            case USER_ALL: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EventContract.UserEntry.TABLE_NAME,
                         projection,
@@ -201,13 +197,28 @@ public class EventProvider extends ContentProvider {
     }
 
 
-    private Cursor getEventByUserId(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getEventAfterTime(Uri uri, String[] projection, String sortOrder) {
+        long time = EventContract.EventEntry.getDateFromUri(uri);
+
+        return sEventByUserIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEventAfterTimeSelection,
+                new String[]{Long.toString(time)},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+    private Cursor getEventAfterTimeAndUser(Uri uri, String[] projection, String sortOrder) {
+        long time = EventContract.EventEntry.getDateFromUri(uri);
         long userId = EventContract.EventEntry.getUserIdFromUri(uri);
 
         return sEventByUserIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                sUserIdSelection,
-                new String[]{Long.toString(userId)},
+                sEventAfterTimeAndUserSelection,
+                new String[]{Long.toString(time), Long.toString(userId)},
                 null,
                 null,
                 sortOrder
@@ -220,9 +231,9 @@ public class EventProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EventContract.PATH_EVENT, EVENT_ALL);
-        matcher.addURI(authority, EventContract.PATH_EVENT + "/user/*", EVENT_WITH_USER_ID);
-        matcher.addURI(authority, EventContract.PATH_EVENT + "/*", EVENT_WITH_ID);
-        matcher.addURI(authority, EventContract.PATH_USER + "/*" , USER_WITH_ID);
+        matcher.addURI(authority, EventContract.PATH_EVENT + "/*", EVENT_AFTER_TIME);
+        matcher.addURI(authority, EventContract.PATH_EVENT + "/*/*", EVENT_AFTER_TIME_AND_USER);
+        matcher.addURI(authority, EventContract.PATH_USER, USER_ALL);
         return matcher;
     }
 

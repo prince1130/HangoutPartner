@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.format.Time;
 
 import nyc.pleasure.hangoutpartneralpha.R;
 
@@ -24,6 +25,13 @@ public class EventContract {
     public static final String PATH_EVENT = "event";
 
 
+    public static long normalizeDate(long startDate) {
+        // normalize the start date to the beginning of the (UTC) day
+        Time time = new Time();
+        time.set(startDate);
+        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
+        return time.setJulianDay(julianDay);
+    }
 
     /* Inner class that defines the table contents of the user table */
     public static final class UserEntry implements BaseColumns {
@@ -74,10 +82,11 @@ public class EventContract {
         public static final String COLUMN_EVENT_ID = "event_id";
 
         // Column with the foreign key into the user table.
-        public static final String COLUMN_CREATER_KEY = "user_id";
+        public static final String COLUMN_CREATER_KEY = "creater_id";
 
         // Date, stored as long in milliseconds since the epoch
-        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_START_TIME = "start_time";
+        public static final String COLUMN_END_TIME = "end_time";
         public static final String COLUMN_LOCATION = "location";
 
         // Short description and long description of the event.
@@ -86,12 +95,39 @@ public class EventContract {
 
         // A few useful Columns
 
+        /////////////////////////////////////////////////////////////////////////////////
+        //// URI BUILDER
+        /////////////////////////////////////////////////////////////////////////////////
         public static Uri buildEventUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static long getUserIdFromUri(Uri uri) {
+        public static Uri buildEventByUserUri(long date, long userId) {
+            long normalizedDate = normalizeDate(date);
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(normalizedDate))
+                    .appendQueryParameter(COLUMN_CREATER_KEY, Long.toString(userId)).build();
+        }
+
+        public static Uri buildEventAfterDateUri(long date) {
+            long normalizedDate = normalizeDate(date);
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(normalizedDate)).build();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+        //// VARIABLE GETTER
+        /////////////////////////////////////////////////////////////////////////////////
+        public static long getDateFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+        public static long getUserIdFromUri(Uri uri) {
+            String userId = uri.getQueryParameter(COLUMN_CREATER_KEY);
+            if (null != userId && userId.length() > 0)
+                return Long.parseLong(userId);
+            else
+                return 0;
         }
 
     }

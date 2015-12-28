@@ -13,7 +13,7 @@ import nyc.pleasure.hangoutpartneralpha.data.EventContract.UserEntry;
 public class EventDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "hangout.db";
 
@@ -38,7 +38,7 @@ public class EventDbHelper extends SQLiteOpenHelper {
 
             EventEntry.COLUMN_EVENT_ID + " INTEGER UNIQUE NOT NULL, " +
             EventEntry.COLUMN_CREATER_KEY + " TEXT NOT NULL, " +  // the ID of the USER created this EVENT
-            EventEntry.COLUMN_DATE + " REAL NOT NULL, " +
+            EventEntry.COLUMN_START_TIME + " REAL NOT NULL, " +
             EventEntry.COLUMN_LOCATION + " TEXT NOT NULL, " +
             EventEntry.COLUMN_TITLE + " TEXT NOT NULL," +
             EventEntry.COLUMN_DETAIL + " TEXT NOT NULL, " +
@@ -49,7 +49,7 @@ public class EventDbHelper extends SQLiteOpenHelper {
 
             // To assure the application have just one weather entry per day
             // per location, it's created a UNIQUE constraint with REPLACE strategy
-            " UNIQUE (" + EventEntry.COLUMN_DATE + ", " +
+            " UNIQUE (" + EventEntry.COLUMN_START_TIME + ", " +
             EventEntry.COLUMN_CREATER_KEY + ") ON CONFLICT REPLACE);";
 
 

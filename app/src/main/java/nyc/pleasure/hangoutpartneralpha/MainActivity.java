@@ -68,14 +68,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doLogout() {
-/*
-
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.preference_login_action), false);
-        editor.commit();
-*/
-
         Intent intent = new Intent(this, AuthActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);

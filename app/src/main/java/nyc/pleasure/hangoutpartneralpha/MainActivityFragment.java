@@ -131,13 +131,6 @@ public class MainActivityFragment extends Fragment {
 */
 
     private void doLogin() {
-/*
-
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.preference_login_action), true);
-        editor.commit();
-*/
         Intent intent = new Intent(this.getActivity(), AuthActivity.class);
         if(intent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(intent);

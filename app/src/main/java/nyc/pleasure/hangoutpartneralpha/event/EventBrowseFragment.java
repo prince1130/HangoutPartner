@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.data.EventContract;
@@ -25,6 +26,9 @@ import nyc.pleasure.hangoutpartneralpha.data.EventContract;
  */
 public class EventBrowseFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String LOG_TAG = EventBrowseFragment.class.getSimpleName();
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,11 +40,15 @@ public class EventBrowseFragment extends Fragment
 
     private OnFragmentInteractionListener mListener;
 
+    private EventBrowseAdapter mEventAdapter;
+    private ListView mEventListView;
+
+    private static final int EVENT_LOADER = 1;
 
     private static final String[] EVENT_COLUMNS = {
             EventContract.EventEntry.TABLE_NAME + "." + EventContract.EventEntry._ID,
             EventContract.EventEntry.COLUMN_EVENT_ID,
-            EventContract.EventEntry.COLUMN_DATE,
+            EventContract.EventEntry.COLUMN_START_TIME,
             EventContract.EventEntry.COLUMN_LOCATION,
             EventContract.EventEntry.COLUMN_TITLE,
             EventContract.EventEntry.COLUMN_DETAIL,
@@ -87,6 +95,8 @@ public class EventBrowseFragment extends Fragment
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +104,7 @@ public class EventBrowseFragment extends Fragment
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getLoaderManager().initLoader(EVENT_LOADER, null, this);
     }
 
     @Override
@@ -102,7 +113,10 @@ public class EventBrowseFragment extends Fragment
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_event_browse, container, false);
 
+        mEventAdapter = new EventBrowseAdapter(getActivity(), null, 0);
 
+        mEventListView = (ListView) rootView.findViewById(R.id.listview_event);
+        mEventListView.setAdapter(mEventAdapter);
 
         return rootView;
     }
@@ -146,23 +160,40 @@ public class EventBrowseFragment extends Fragment
         void onFragmentInteraction(Uri uri);
     }
 
+
+    public void onEventChanged() {
+        updateEvent();
+        getLoaderManager().restartLoader(EVENT_LOADER, null, this);
+    }
+
+    private void updateEvent() {
+//        EventSyncAdapter.syncImmediately(getActivity());
+    }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////    LOADER
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String sortOrder = EventContract.EventEntry.COLUMN_START_TIME + " ASC";
+        Uri eventListUri = EventContract.EventEntry.buildEventAfterDateUri(System.currentTimeMillis());
 
-        return new CursorLoader(getActivity());
+        return new CursorLoader(getActivity(),
+                eventListUri,
+                EVENT_COLUMNS,
+                null,
+                null,
+                sortOrder);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        mEventAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mEventAdapter.swapCursor(null);
     }
 
 }

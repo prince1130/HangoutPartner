@@ -265,18 +265,6 @@ public class AuthActivity extends AppCompatActivity implements
         mFirebaseRef.addAuthStateListener(mAuthStateListener);
     }
 
-/*
-    public void onStart() {
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        Boolean defaultValue = true;
-        Boolean doingLogin = sharedPref.getBoolean(getString(R.string.preference_login_action), defaultValue);
-        if(!doingLogin) {
-            logout();
-            this.goBackToMain();
-        }
-        super.onStart();
-    }
-*/
 
 
     @Override
