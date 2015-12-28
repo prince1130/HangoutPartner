@@ -232,7 +232,7 @@ public class AuthActivity extends AppCompatActivity implements
         mLogoutCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logoutCancel();
+                goBackToMain();
             }
         });
 
@@ -402,6 +402,7 @@ public class AuthActivity extends AppCompatActivity implements
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
             mLogoutSection.setVisibility(View.VISIBLE);
+            mLoggedInStatusTextView.setVisibility(View.VISIBLE);
 
             if (authData.getProvider().equals("facebook")
                     || authData.getProvider().equals("google")
@@ -413,6 +414,9 @@ public class AuthActivity extends AppCompatActivity implements
             } else {
                 Log.e(TAG, "Invalid provider: " + authData.getProvider());
             }
+            if (name != null) {
+                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
+            }
         } else {
             //// Just LoggedOut
             //* No authenticated user show all the login buttons *//*
@@ -422,6 +426,7 @@ public class AuthActivity extends AppCompatActivity implements
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
             mLogoutSection.setVisibility(View.GONE);
+            mLoggedInStatusTextView.setVisibility(View.GONE);
         }
 
         this.mAuthData = authData;
@@ -515,7 +520,7 @@ public class AuthActivity extends AppCompatActivity implements
                 map.put("displayName", authData.getProviderData().get("displayName").toString());
             }
             mFirebaseRef.child("user_access").child(authData.getUid()).setValue(map);
-
+            goBackToMain();
         }
 
         @Override
@@ -681,9 +686,10 @@ public class AuthActivity extends AppCompatActivity implements
 
     private void logoutConfirm() {
         logout();
+        goBackToMain();
     }
 
-    private void logoutCancel() {
+    private void goBackToMain() {
         Intent afterAuthenticatedIntent = new Intent(this, MainActivity.class);
         startActivity(afterAuthenticatedIntent);
     }

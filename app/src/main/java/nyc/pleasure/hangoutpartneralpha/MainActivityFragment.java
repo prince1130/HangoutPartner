@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import nyc.pleasure.hangoutpartneralpha.auth.AuthActivity;
 import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
+import nyc.pleasure.hangoutpartneralpha.event.EventBrowseActivity;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -21,20 +22,20 @@ public class MainActivityFragment extends Fragment {
 
     public static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
-    private FragmentActivity fragAct;
     private ViewHolder viewHolderRef;
 
     public static class ViewHolder {
-        public final TextView textViewAccount;
-        public final TextView textViewMessage;
-        public final TextView textViewEvent;
         public final TextView textViewLoginStatus;
+        public final TextView textViewLogin;
+        public final TextView textViewEvent;
+        public final TextView textViewMessage;
+
 
         public ViewHolder(View view) {
-            textViewAccount = (TextView) view.findViewById(R.id.text_view_account);
-            textViewMessage = (TextView) view.findViewById(R.id.text_view_message);
-            textViewEvent = (TextView) view.findViewById(R.id.text_view_event);
             textViewLoginStatus = (TextView) view.findViewById(R.id.login_status);
+            textViewLogin = (TextView) view.findViewById(R.id.text_view_login);
+            textViewEvent = (TextView) view.findViewById(R.id.text_view_event);
+            textViewMessage = (TextView) view.findViewById(R.id.text_view_message);
         }
     }
 
@@ -49,31 +50,68 @@ public class MainActivityFragment extends Fragment {
         viewHolderRef = new ViewHolder(rootView);
         rootView.setTag(viewHolderRef);
 
-        viewHolderRef.textViewAccount.setText(R.string.action_account);
-        viewHolderRef.textViewMessage.setText(R.string.action_message);
+        /**
+         *   LOGIN
+         */
+        viewHolderRef.textViewLogin.setText(R.string.action_login);
+        viewHolderRef.textViewLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLogin();
+            }
+        });
+
+
+        /**
+         *   BROWSE EVENTS
+         */
         viewHolderRef.textViewEvent.setText(R.string.action_event);
+        viewHolderRef.textViewEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                browseEvent();
+            }
+        });
 
-        fragAct = this.getActivity();
 
+        /**
+         *   VIEW MESSAGES
+         */
+        viewHolderRef.textViewMessage.setText(R.string.action_message);
         viewHolderRef.textViewMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(fragAct, ChatActivity.class);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(intent);
-                }
+                viewMessage();
             }
-
         });
 
         return rootView;
     }
 
+
+    @Override
     public void onStart() {
+
+        /**
+         *   LOGIN STATUS.
+         */
+
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String defaultValue = "";
         String userName = sharedPref.getString(getString(R.string.preference_user_name), defaultValue);
-        viewHolderRef.textViewLoginStatus.setText("Welcome " + userName + " !");
+
+        if(userName == null || userName.length() < 1) {
+            // NOT LOGIN YET.
+            viewHolderRef.textViewLoginStatus.setText("We are an awesome app to help you connect people. But you need to Login First. ");
+            viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
+            viewHolderRef.textViewEvent.setVisibility(View.GONE);
+            viewHolderRef.textViewMessage.setVisibility(View.GONE);
+        } else {
+            viewHolderRef.textViewLoginStatus.setText("Welcome back " + userName + " !");
+            viewHolderRef.textViewLogin.setVisibility(View.GONE);
+            viewHolderRef.textViewEvent.setVisibility(View.VISIBLE);
+            viewHolderRef.textViewMessage.setVisibility(View.VISIBLE);
+        }
 
         super.onStart();
     }
@@ -91,5 +129,34 @@ public class MainActivityFragment extends Fragment {
         super.onDestroy();
     }
 */
+
+    private void doLogin() {
+/*
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.preference_login_action), true);
+        editor.commit();
+*/
+        Intent intent = new Intent(this.getActivity(), AuthActivity.class);
+        if(intent.resolveActivity(this.getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private void browseEvent() {
+        Intent intent = new Intent(this.getActivity(), EventBrowseActivity.class);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private void viewMessage() {
+        Intent intent = new Intent(this.getActivity(), ChatActivity.class);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 
 }

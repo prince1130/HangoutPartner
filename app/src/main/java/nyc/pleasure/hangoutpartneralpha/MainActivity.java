@@ -55,27 +55,16 @@ public class MainActivity extends AppCompatActivity {
         } else if(id == R.id.action_logout) {
             doLogout();
             return true;
-        } else if(id == R.id.action_login) {
-            doLogin();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void doLogin() {
-/*
+    @Override
+    public void onStart() {
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.preference_login_action), true);
-        editor.commit();
-*/
 
-        Intent intent = new Intent(this, AuthActivity.class);
-        if(intent.resolveActivity(this.getPackageManager()) != null) {
-            startActivity(intent);
-        }
+        super.onStart();
     }
 
     private void doLogout() {

@@ -35,7 +35,7 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
     protected void populateView(View view, FunEvent event) {
         // Map a Chat object to an entry in our listview
         String author = event.getCreaterUserId();
-        TextView authorText = (TextView) view.findViewById(R.id.event_author);
+        TextView authorText = (TextView) view.findViewById(R.id.event_creater);
         authorText.setText(author + ": ");
         // If the message was sent by this user, color it differently
         if (author != null && author.equals(mUsername)) {
