@@ -16,4 +16,7 @@
     <string name="preference_file_key">nyc.pleasure.hangout</string>
     <string name="preference_user_name">UserName</string>
 
+    <string name="content_authority">nyc.pleasure.hangoutpartneralpha</string>
+    <string name="sync_account_type">nyc.pleasure</string>
+
 </resources>

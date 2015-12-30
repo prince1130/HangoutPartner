@@ -102,7 +102,7 @@ public class MainActivityFragment extends Fragment {
 
         if(userName == null || userName.length() < 1) {
             // NOT LOGIN YET.
-            viewHolderRef.textViewLoginStatus.setText("We are an awesome app to help you connect people. But you need to Login First. ");
+            viewHolderRef.textViewLoginStatus.setText("Connect with others through Interesting Events. Login to start the Fun. ");
             viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
             viewHolderRef.textViewEvent.setVisibility(View.GONE);
             viewHolderRef.textViewMessage.setVisibility(View.GONE);

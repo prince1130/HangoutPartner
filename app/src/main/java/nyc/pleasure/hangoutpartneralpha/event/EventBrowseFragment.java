@@ -167,7 +167,7 @@ public class EventBrowseFragment extends Fragment
     }
 
     private void updateEvent() {
-//        EventSyncAdapter.syncImmediately(getActivity());
+//        HangoutSyncAdapter.syncImmediately(getActivity());
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
