@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_account) {
+            doAccount();
             return true;
         } else if(id == R.id.action_logout) {
             doLogout();
@@ -61,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    private void doAccount() {
+        Intent intent = new Intent(this, AccountActivity.class);
+        if(intent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private void doLogout() {
