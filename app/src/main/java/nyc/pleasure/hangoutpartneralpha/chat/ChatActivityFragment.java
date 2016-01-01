@@ -31,10 +31,12 @@ import nyc.pleasure.hangoutpartneralpha.obj.ChatMessage;
  */
 public class ChatActivityFragment extends Fragment {
 
-    private final String FIREBASE_URL = "https://sizzling-heat-8207.firebaseio.com/";
+    private static String FIREBASE_URL = null;
+    private Firebase mFirebaseRootRef = null;
+    private Firebase mFirebaseChatRef = null;
 
     private String mUsername;
-    private Firebase mFirebaseRef;
+
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
 
@@ -48,10 +50,12 @@ public class ChatActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FIREBASE_URL = getResources().getString(R.string.firebase_url);
         // Make sure we have a mUsername
         setupUsername();
         // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("chat");
+        mFirebaseRootRef = new Firebase(FIREBASE_URL).getRoot();
+        mFirebaseChatRef = new Firebase(FIREBASE_URL).child("chat");
     }
 
 
@@ -86,7 +90,7 @@ public class ChatActivityFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_view_chat);
 
         // Tell our list adapter that we only want 50 messages at a time
-        mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), parentActivity, R.layout.list_item_chat, mUsername);
+        mChatListAdapter = new ChatListAdapter(mFirebaseChatRef.limit(50), parentActivity, R.layout.list_item_chat, mUsername);
 
         mListView.setAdapter(mChatListAdapter);
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -99,7 +103,7 @@ public class ChatActivityFragment extends Fragment {
 
 
         // Finally, a little indication of connection status
-        mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
+        mConnectedListener = mFirebaseRootRef.child(".info/connected").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean connected = (Boolean) dataSnapshot.getValue();
@@ -122,7 +126,7 @@ public class ChatActivityFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
+        mFirebaseRootRef.child(".info/connected").removeEventListener(mConnectedListener);
         mChatListAdapter.cleanup();
     }
 
@@ -148,7 +152,7 @@ public class ChatActivityFragment extends Fragment {
             chat.setContent(input);
             chat.setUserIdFrom(mUsername);
             // Create a new, auto-generated child of that chat location, and save our chat data there
-            mFirebaseRef.push().setValue(chat);
+            mFirebaseChatRef.push().setValue(chat);
             inputText.setText("");
         }
     }

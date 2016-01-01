@@ -10,13 +10,15 @@ public class User {
 
     private String userId = null;
     private Long joinedDate = null;
-    private String displayName = null;
     private String firstName = null;
     private String lastName = null;
-    private String email = null;
+    private String displayName = null;
+    private Long birthDate = null;
     private String gender = null;
-    private Integer age = null;
+
+    private String email = null;
     private Integer zipCode = null;
+
     private String selfIntroduction = null;
     private String descriptionIdealPartner = null;
     private String descriptionReasonJoinMe = null;
@@ -49,14 +51,6 @@ public class User {
         this.gender = gender;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     public List<String> getPhotos() {
         return photos;
     }
@@ -80,6 +74,32 @@ public class User {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+
+    public Long getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Long birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
 
 
 }

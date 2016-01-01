@@ -43,6 +43,7 @@ import java.util.Map;
 
 import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
+import nyc.pleasure.hangoutpartneralpha.Utility;
 
 /**
  * Created by Chien on 12/20/2015.
@@ -51,7 +52,7 @@ public class AuthActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = AuthActivity.class.getSimpleName();
+    private static final String LOG_TAG = AuthActivity.class.getSimpleName();
 
     /* *************************************
      *              GENERAL                *
@@ -62,6 +63,7 @@ public class AuthActivity extends AppCompatActivity implements
     /* A dialog that is presented until the Firebase authentication finished. */
     private ProgressDialog mAuthProgressDialog;
 
+    private static String FIREBASE_URL = null;
     /* A reference to the Firebase */
     private Firebase mFirebaseRef;
 
@@ -145,7 +147,7 @@ public class AuthActivity extends AppCompatActivity implements
         mFacebookAccessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+                Log.i(LOG_TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
                 onFacebookAccessTokenChange(currentAccessToken);
             }
         };
@@ -166,7 +168,7 @@ public class AuthActivity extends AppCompatActivity implements
                         getGoogleOAuthTokenAndLogin();
                     } else {
                     /* connect API now */
-                        Log.d(TAG, "Trying to connect to Google API");
+                        Log.d(LOG_TAG, "Trying to connect to Google API");
                         mGoogleApiClient.connect();
                     }
                 }
@@ -243,8 +245,10 @@ public class AuthActivity extends AppCompatActivity implements
          ***************************************/
         mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
 
+        FIREBASE_URL = getResources().getString(R.string.firebase_url);
+        Log.i(LOG_TAG, " FIREBASE_URL " + FIREBASE_URL);
         /* Create the Firebase ref that is used for all authentication with Firebase */
-        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+        mFirebaseRef = new Firebase(FIREBASE_URL);
 
         /* Setup the progress dialog that is displayed later when authenticating with Firebase */
         mAuthProgressDialog = new ProgressDialog(this);
@@ -400,10 +404,11 @@ public class AuthActivity extends AppCompatActivity implements
                     || authData.getProvider().equals("password")) {
                 name = authData.getUid();
             } else {
-                Log.e(TAG, "Invalid provider: " + authData.getProvider());
+                Log.e(LOG_TAG, "Invalid provider: " + authData.getProvider());
             }
             if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
+                Log.i(LOG_TAG, "Logged in as " + name + " (" + authData.getProvider() + ")");
+//                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
             }
         } else {
             //// Just LoggedOut
@@ -421,57 +426,11 @@ public class AuthActivity extends AppCompatActivity implements
         /* invalidate options menu to hide/show the logout button */
 //        supportInvalidateOptionsMenu();
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.preference_user_name), name);
-        editor.commit();
+        Utility.setLoggedInUserId(this, name);
 
     }
 
 
-    /*
-    *//**
-     * Once a user is logged in, take the mAuthData provided from Firebase and "use" it.
-     *//*
-    private void setAuthenticatedUser2(AuthData authData) {
-        if (authData != null) {
-            *//* Hide all the login buttons *//*
-            mFacebookLoginButton.setVisibility(View.GONE);
-            mGoogleLoginButton.setVisibility(View.GONE);
-            mTwitterLoginButton.setVisibility(View.GONE);
-            mPasswordLoginButton.setVisibility(View.GONE);
-            mAnonymousLoginButton.setVisibility(View.GONE);
-            mLoggedInStatusTextView.setVisibility(View.VISIBLE);
-            *//* show a provider specific status text *//*
-            String name = null;
-            if (authData.getProvider().equals("facebook")
-                    || authData.getProvider().equals("google")
-                    || authData.getProvider().equals("twitter")) {
-                name = (String) authData.getProviderData().get("displayName");
-            } else if (authData.getProvider().equals("anonymous")
-                    || authData.getProvider().equals("password")) {
-                name = authData.getUid();
-            } else {
-                Log.e(TAG, "Invalid provider: " + authData.getProvider());
-            }
-            if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
-            }
-        } else {
-            *//* No authenticated user show all the login buttons *//*
-            mFacebookLoginButton.setVisibility(View.VISIBLE);
-            mGoogleLoginButton.setVisibility(View.VISIBLE);
-            mTwitterLoginButton.setVisibility(View.VISIBLE);
-            mPasswordLoginButton.setVisibility(View.VISIBLE);
-            mAnonymousLoginButton.setVisibility(View.VISIBLE);
-            mLoggedInStatusTextView.setVisibility(View.GONE);
-        }
-        this.mAuthData = authData;
-        *//* invalidate options menu to hide/show the logout button *//*
-        supportInvalidateOptionsMenu();
-    }
-
-    */
 
     /**
      * Show errors to users
@@ -499,7 +458,7 @@ public class AuthActivity extends AppCompatActivity implements
         @Override
         public void onAuthenticated(AuthData authData) {
             mAuthProgressDialog.hide();
-            Log.i(TAG, provider + " auth successful");
+            Log.i(LOG_TAG, provider + " auth successful");
             setAuthenticatedUser(authData);
 
             Map<String, String> map = new HashMap<String, String>();
@@ -583,10 +542,10 @@ public class AuthActivity extends AppCompatActivity implements
                     token = GoogleAuthUtil.getToken(AuthActivity.this, accName, scope);
                 } catch (IOException transientEx) {
                     /* Network or server error */
-                    Log.e(TAG, "Error authenticating with Google: " + transientEx);
+                    Log.e(LOG_TAG, "Error authenticating with Google: " + transientEx);
                     errorMessage = "Network error: " + transientEx.getMessage();
                 } catch (UserRecoverableAuthException e) {
-                    Log.w(TAG, "Recoverable Google OAuth error: " + e.toString());
+                    Log.w(LOG_TAG, "Recoverable Google OAuth error: " + e.toString());
                     /* We probably need to ask for permissions, so start the intent if there is none pending */
                     if (!mGoogleIntentInProgress) {
                         mGoogleIntentInProgress = true;
@@ -596,7 +555,7 @@ public class AuthActivity extends AppCompatActivity implements
                 } catch (GoogleAuthException authEx) {
                     /* The call is not ever expected to succeed assuming you have already verified that
                      * Google Play services is installed. */
-                    Log.e(TAG, "Error authenticating with Google: " + authEx.getMessage(), authEx);
+                    Log.e(LOG_TAG, "Error authenticating with Google: " + authEx.getMessage(), authEx);
                     errorMessage = "Error authenticating with Google: " + authEx.getMessage();
                 }
                 return token;
@@ -635,7 +594,7 @@ public class AuthActivity extends AppCompatActivity implements
                  * or they cancel. */
                 resolveSignInError();
             } else {
-                Log.e(TAG, result.toString());
+                Log.e(LOG_TAG, result.toString());
             }
         }
     }

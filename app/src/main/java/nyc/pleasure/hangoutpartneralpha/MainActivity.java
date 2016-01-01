@@ -35,9 +35,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        String userId = Utility.getLoggedInUserId(this);
+
+        if(userId != null && userId.length() > 0) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        } else {
+            // NOT LOGIN YET. Don't display Menu.
+            return false;
+        }
     }
 
     @Override
@@ -72,11 +79,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doLogout() {
+        /// Need to destroy preference saved earlier.
+        Utility.clearPreference(this);
         Intent intent = new Intent(this, AuthActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         }
     }
+
 
     /*
     private void test() {

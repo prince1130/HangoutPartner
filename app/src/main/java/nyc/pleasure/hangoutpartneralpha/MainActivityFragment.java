@@ -48,7 +48,7 @@ public class MainActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         viewHolderRef = new ViewHolder(rootView);
-        rootView.setTag(viewHolderRef);
+//        rootView.setTag(viewHolderRef);
 
         /**
          *   LOGIN
@@ -96,18 +96,18 @@ public class MainActivityFragment extends Fragment {
          *   LOGIN STATUS.
          */
 
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        String defaultValue = "";
-        String userName = sharedPref.getString(getString(R.string.preference_user_name), defaultValue);
+        String userDisplayId = Utility.getLoggedInUserId(this.getContext());
+        String userDisplayName = Utility.getLoggedInUserDisplayName(this.getContext());
 
-        if(userName == null || userName.length() < 1) {
+        if(userDisplayId == null || userDisplayId.length() < 1) {
             // NOT LOGIN YET.
             viewHolderRef.textViewLoginStatus.setText("Connect with others through Interesting Events. Login to start the Fun. ");
             viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
             viewHolderRef.textViewEvent.setVisibility(View.GONE);
             viewHolderRef.textViewMessage.setVisibility(View.GONE);
         } else {
-            viewHolderRef.textViewLoginStatus.setText("Welcome back " + userName + " !");
+            // Use easy to read DISPLAY NAME instead of ID.
+            viewHolderRef.textViewLoginStatus.setText("Welcome back !");
             viewHolderRef.textViewLogin.setVisibility(View.GONE);
             viewHolderRef.textViewEvent.setVisibility(View.VISIBLE);
             viewHolderRef.textViewMessage.setVisibility(View.VISIBLE);
