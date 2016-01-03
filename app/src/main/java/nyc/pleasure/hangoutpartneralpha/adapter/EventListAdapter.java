@@ -34,6 +34,7 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
     @Override
     protected void populateView(View view, FunEvent event) {
         // Map a Chat object to an entry in our listview
+/*
         String author = event.getCreaterUserId();
         TextView authorText = (TextView) view.findViewById(R.id.event_creater);
         authorText.setText(author + ": ");
@@ -43,6 +44,16 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
         } else {
             authorText.setTextColor(Color.BLUE);
         }
-        ((TextView) view.findViewById(R.id.event_title)).setText(event.getTitle());
+        */
+        ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail
+        ((TextView) view.findViewById(R.id.textView_title)).setText(event.getTitle());
+        ((TextView) view.findViewById(R.id.textView_location)).setText(event.getLocation());
+        ((TextView) view.findViewById(R.id.textView_time)).setText(converTime(event.getStartTime()));
+
     }
+
+    private String converTime(Long time) {
+        return "Jan 25, 2016";
+    }
+
 }

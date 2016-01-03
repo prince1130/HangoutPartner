@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="32dp" />
 
         <TextView
             android:id="@+id/text_view_login"
@@ -30,23 +30,23 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="32dp" />
 
         <TextView
-            android:id="@+id/text_view_message"
+            android:id="@+id/text_view_event_browse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="32dp" />
 
         <TextView
-            android:id="@+id/text_view_event"
+            android:id="@+id/text_view_event_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="32dp" />
 
     </LinearLayout>
 

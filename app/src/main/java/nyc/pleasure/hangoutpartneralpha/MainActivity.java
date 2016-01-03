@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import nyc.pleasure.hangoutpartneralpha.auth.AuthActivity;
+import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
 import nyc.pleasure.hangoutpartneralpha.sync.HangoutSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_account) {
-            doAccount();
+            viewAccount();
+            return true;
+        } else if(id == R.id.action_message) {
+            viewMessage();
             return true;
         } else if(id == R.id.action_logout) {
             doLogout();
@@ -71,9 +75,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    private void doAccount() {
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// CLICK ACTION FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void viewAccount() {
         Intent intent = new Intent(this, AccountActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private void viewMessage() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
     }

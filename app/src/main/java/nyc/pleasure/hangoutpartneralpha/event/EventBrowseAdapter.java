@@ -24,13 +24,13 @@ public class EventBrowseAdapter extends CursorAdapter {
         public final TextView titleView;
         public final TextView locationView;
         public final TextView timeView;
-        public final TextView createrView;
+//        public final TextView createrView;
 
         public ViewHolder(View view) {
-            titleView = (TextView) view.findViewById(R.id.event_title);
-            locationView = (TextView) view.findViewById(R.id.event_location);
-            timeView = (TextView) view.findViewById(R.id.event_time);
-            createrView = (TextView) view.findViewById(R.id.event_creater);
+            titleView = (TextView) view.findViewById(R.id.textView_title);
+            locationView = (TextView) view.findViewById(R.id.textView_location);
+            timeView = (TextView) view.findViewById(R.id.textView_time);
+//            createrView = (TextView) view.findViewById(R.id.event_creater);
         }
     }
 
@@ -43,10 +43,10 @@ public class EventBrowseAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.titleView.setText(cursor.getString(EventBrowseFragment.COL_EVENT_TITLE));
-        viewHolder.locationView.setText(cursor.getString(EventBrowseFragment.COL_EVENT_LOCATION));
-        viewHolder.timeView.setText(cursor.getString(EventBrowseFragment.COL_EVENT_DATE));
-        viewHolder.createrView.setText(cursor.getString(EventBrowseFragment.COL_USER_DISPLAY));
+        viewHolder.titleView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_TITLE));
+        viewHolder.locationView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_LOCATION));
+        viewHolder.timeView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_DATE));
+//        viewHolder.createrView.setText(cursor.getString(EventBrowseFragmentOld.COL_USER_DISPLAY));
     }
 
     @Override

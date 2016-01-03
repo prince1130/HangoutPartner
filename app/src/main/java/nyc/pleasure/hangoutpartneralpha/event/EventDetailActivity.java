@@ -5,19 +5,16 @@ import android.os.Bundle;
 
 import nyc.pleasure.hangoutpartneralpha.R;
 
-public class EventCreateActivity extends AppCompatActivity {
+public class EventDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_create);
-
+        setContentView(R.layout.activity_event_detail);
         if(savedInstanceState == null) {
             // Create the detail fragment and add it to the activity  using a fragment transaction.
-            EventCreateFragment fragment = new EventCreateFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.event_create_container, fragment).commit();
+            EventDetailFragment fragment = new EventDetailFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.event_detail_container, fragment).commit();
         }
     }
-
-
 }

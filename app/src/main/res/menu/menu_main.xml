@@ -4,14 +4,19 @@
     tools:context="nyc.pleasure.hangoutpartneralpha.MainActivity">
 
     <item
-        android:id="@+id/action_logout"
-        android:orderInCategory="100"
-        android:title="@string/action_logout"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_account"
         android:orderInCategory="100"
         android:title="@string/action_account"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_message"
+        android:orderInCategory="100"
+        android:title="@string/action_message"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="@string/action_logout"
         app:showAsAction="never" />
 
 </menu>

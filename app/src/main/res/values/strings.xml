@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">HangoutPartnerAlpha</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_logout">Logout</string>
+
     <string name="action_login"> Login</string>
+    <string name="action_event_browse">Browse Events</string>
+    <string name="action_event_create">Create Events</string>
+
     <string name="action_account">Account</string>
-    <string name="action_event">Browse Events</string>
-    <string name="action_message">Read Message</string>
+    <string name="action_message">Message</string>
+    <string name="action_settings">Setting</string>
+    <string name="action_logout">Logout</string>
 
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google+</string>
@@ -14,6 +17,9 @@
     <string name="login_anonymously">Login Anonymously</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_event_browse">EventBrowse</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

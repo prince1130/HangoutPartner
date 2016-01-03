@@ -14,6 +14,7 @@ import android.widget.TextView;
 import nyc.pleasure.hangoutpartneralpha.auth.AuthActivity;
 import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
 import nyc.pleasure.hangoutpartneralpha.event.EventBrowseActivity;
+import nyc.pleasure.hangoutpartneralpha.event.EventCreateActivity;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,15 +28,15 @@ public class MainActivityFragment extends Fragment {
     public static class ViewHolder {
         public final TextView textViewLoginStatus;
         public final TextView textViewLogin;
-        public final TextView textViewEvent;
-        public final TextView textViewMessage;
+        public final TextView textViewEventBrowse;
+        public final TextView textViewEventCreate;
 
 
         public ViewHolder(View view) {
             textViewLoginStatus = (TextView) view.findViewById(R.id.login_status);
             textViewLogin = (TextView) view.findViewById(R.id.text_view_login);
-            textViewEvent = (TextView) view.findViewById(R.id.text_view_event);
-            textViewMessage = (TextView) view.findViewById(R.id.text_view_message);
+            textViewEventBrowse = (TextView) view.findViewById(R.id.text_view_event_browse);
+            textViewEventCreate = (TextView) view.findViewById(R.id.text_view_event_create);
         }
     }
 
@@ -65,8 +66,8 @@ public class MainActivityFragment extends Fragment {
         /**
          *   BROWSE EVENTS
          */
-        viewHolderRef.textViewEvent.setText(R.string.action_event);
-        viewHolderRef.textViewEvent.setOnClickListener(new View.OnClickListener() {
+        viewHolderRef.textViewEventBrowse.setText(R.string.action_event_browse);
+        viewHolderRef.textViewEventBrowse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 browseEvent();
@@ -77,11 +78,11 @@ public class MainActivityFragment extends Fragment {
         /**
          *   VIEW MESSAGES
          */
-        viewHolderRef.textViewMessage.setText(R.string.action_message);
-        viewHolderRef.textViewMessage.setOnClickListener(new View.OnClickListener() {
+        viewHolderRef.textViewEventCreate.setText(R.string.action_event_create);
+        viewHolderRef.textViewEventCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewMessage();
+                createEvent();
             }
         });
 
@@ -103,14 +104,14 @@ public class MainActivityFragment extends Fragment {
             // NOT LOGIN YET.
             viewHolderRef.textViewLoginStatus.setText("Connect with others through Interesting Events. Login to start the Fun. ");
             viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
-            viewHolderRef.textViewEvent.setVisibility(View.GONE);
-            viewHolderRef.textViewMessage.setVisibility(View.GONE);
+            viewHolderRef.textViewEventBrowse.setVisibility(View.GONE);
+            viewHolderRef.textViewEventCreate.setVisibility(View.GONE);
         } else {
             // Use easy to read DISPLAY NAME instead of ID.
             viewHolderRef.textViewLoginStatus.setText("Welcome back !");
             viewHolderRef.textViewLogin.setVisibility(View.GONE);
-            viewHolderRef.textViewEvent.setVisibility(View.VISIBLE);
-            viewHolderRef.textViewMessage.setVisibility(View.VISIBLE);
+            viewHolderRef.textViewEventBrowse.setVisibility(View.VISIBLE);
+            viewHolderRef.textViewEventCreate.setVisibility(View.VISIBLE);
         }
 
         super.onStart();
@@ -144,12 +145,11 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
-    private void viewMessage() {
-        Intent intent = new Intent(this.getActivity(), ChatActivity.class);
+    private void createEvent() {
+        Intent intent = new Intent(this.getActivity(), EventCreateActivity.class);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(intent);
         }
     }
-
 
 }

@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountFragment">
+    tools:context=".event.EventCreateFragment">
 
 <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,41 +16,7 @@
         android:layout_gravity="center"
         android:padding="16dp">
 
-
-        <!--  EMAIL. DISPLAY NAME.  -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:ems="10"
-                android:id="@+id/editTextEmail" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Display Name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/editTextDisplayName" />
-
-        </LinearLayout>
-
-
-        <!--  FIRST NAME. LAST NAME.. -->
+        <!--  TITLE  -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -61,32 +27,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="First Name"
+                android:text="Title"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="First"
                 android:ems="10"
-                android:id="@+id/editTextFirstName" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Last Name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Last"
-                android:ems="10"
-                android:id="@+id/editTextLastName" />
+                android:id="@+id/editTextTitle"/>
 
         </LinearLayout>
 
-
-        <!--  GENDER. BIRTHDATE  -->
+        <!--  DATE. TIME  -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -97,30 +48,31 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gender"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="5"
-                android:id="@+id/editTextGender"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Birth Date"
+                android:text="Date"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
-                android:id="@+id/editTextDate" />
+                android:id="@+id/editTextEventDate" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/editTextEventTime" />
 
         </LinearLayout>
 
 
-        <!--  DESCRIPTION  -->
+        <!--  LOCATION  -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -131,14 +83,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="Location"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/editTextLocation"/>
+
+        </LinearLayout>
+
+
+        <!--  DETAIL  -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detail"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/editTextDescription" />
+                android:ems="20"
+                android:id="@+id/editTextEventDetail" />
 
         </LinearLayout>
 
@@ -152,14 +126,14 @@
             android:layout_marginTop="10dp">
 
             <Button
-                android:id="@+id/buttonSave"
+                android:id="@+id/buttonEventSave"
                 android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
 
             <Button
-                android:id="@+id/buttonCancel"
+                android:id="@+id/buttonEventCancel"
                 android:text="Cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,26 +142,6 @@
         </LinearLayout>
 
 
-        <!--  ACCOUNT ID  -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Account ID "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textViewAcctId"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 

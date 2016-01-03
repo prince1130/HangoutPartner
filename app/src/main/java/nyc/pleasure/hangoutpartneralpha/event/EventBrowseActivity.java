@@ -15,12 +15,9 @@ public class EventBrowseActivity extends AppCompatActivity
         setContentView(R.layout.activity_event_browse);
 
         if(savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-
+            // Create the detail fragment and add it to the activity using a fragment transaction.
             EventBrowseFragment fragment = new EventBrowseFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.event_browse_container, fragment).commit();
-
 
         }
 
@@ -29,5 +26,6 @@ public class EventBrowseActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 
 }
