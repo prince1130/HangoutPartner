@@ -1,5 +1,6 @@
 package nyc.pleasure.hangoutpartneralpha.event;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +8,7 @@ import android.os.Bundle;
 import nyc.pleasure.hangoutpartneralpha.R;
 
 public class EventBrowseActivity extends AppCompatActivity
-        implements EventBrowseFragment.OnFragmentInteractionListener {
+        implements EventBrowseFragment.OnFragmentInteractionListener, EventBrowseFragment.Callback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,13 @@ public class EventBrowseActivity extends AppCompatActivity
     }
 
     public void onFragmentInteraction(Uri uri) {
+        Intent intent = new Intent(this, EventDetailActivity.class).setData(uri);
+        startActivity(intent);
+    }
 
+    public void onItemSelected(String eventId) {
+        Intent intent = new Intent(this, EventDetailActivity.class).putExtra("selectedEventId", eventId);
+        startActivity(intent);
     }
 
 

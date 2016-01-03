@@ -90,7 +90,7 @@ public class EventCreateFragment extends Fragment {
         viewHolderRef.buttonEventCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBackToMain();
+                goBrowseEvent();
             }
         });
 
@@ -117,18 +117,20 @@ public class EventCreateFragment extends Fragment {
         event.setStartTime(convertTime(date, time));
 
         Long eventId = event.getCreatedTime();
+        event.setEventId(eventId.toString());
         mFirebaseUtility.getEventReference().child(eventId.toString()).setValue(event);
 
-        goBackToMain();
+        goBrowseEvent();
     }
 
     private long convertTime(String date, String time) {
         return System.currentTimeMillis();
     }
 
-    private void goBackToMain() {
-        Intent afterAuthenticatedIntent = new Intent(this.getActivity(), MainActivity.class);
-        startActivity(afterAuthenticatedIntent);
+
+    private void goBrowseEvent() {
+        Intent intent = new Intent(this.getActivity(), EventBrowseActivity.class);
+        startActivity(intent);
     }
 
 }

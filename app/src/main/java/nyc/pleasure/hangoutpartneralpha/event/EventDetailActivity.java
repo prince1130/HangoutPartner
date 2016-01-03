@@ -1,5 +1,7 @@
 package nyc.pleasure.hangoutpartneralpha.event;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -15,6 +17,7 @@ public class EventDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity  using a fragment transaction.
             EventDetailFragment fragment = new EventDetailFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.event_detail_container, fragment).commit();
+
         }
     }
 }

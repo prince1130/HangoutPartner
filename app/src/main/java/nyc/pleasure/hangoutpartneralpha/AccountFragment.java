@@ -17,6 +17,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
 import nyc.pleasure.hangoutpartneralpha.obj.User;
 
 
@@ -57,12 +58,11 @@ public class AccountFragment extends Fragment {
 /////////////////////////////////////////////////////////////////////////////////////
 ////    PERSISTENCE
 /////////////////////////////////////////////////////////////////////////////////////
-    /* A reference to the Firebase */
-    private static String FIREBASE_URL = null;
-    private Firebase mFirebaseRootRef = null;
-    private Firebase mFirebaseUserRef = null;
-    private ValueEventListener mFirebaseUserValueListener = null;
 
+    /* A reference to the Firebase */
+    private Firebase mFirebaseUserRef;
+    private ValueEventListener mFirebaseUserValueListener = null;
+    private String mUserId;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -75,15 +75,9 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FIREBASE_URL = getResources().getString(R.string.firebase_url);
-        Log.i(LOG_TAG, " FIREBASE_URL " + FIREBASE_URL);
         // Setup our Firebase mFirebaseRef
-        mFirebaseRootRef = new Firebase(FIREBASE_URL).getRoot();
-
-        String userId = Utility.getLoggedInUserId(this.getContext());
-        mFirebaseUserRef = new Firebase(FIREBASE_URL).child("user").child(userId);
-
+        mUserId = Utility.getLoggedInUserId(this.getContext());
+        mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(mUserId);
     }
 
 

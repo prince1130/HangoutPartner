@@ -8,15 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
-
-import com.firebase.client.Firebase;
+import android.widget.TextView;
 
 
 import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.Utility;
 import nyc.pleasure.hangoutpartneralpha.adapter.EventListAdapter;
+import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
+import nyc.pleasure.hangoutpartneralpha.obj.FunEvent;
 
 
 /**
@@ -31,12 +34,10 @@ public class EventBrowseFragment extends Fragment {
 ////    PERSISTENCE
 /////////////////////////////////////////////////////////////////////////////////////
     /* A reference to the Firebase */
-    private static String FIREBASE_URL = null;
-    private Firebase mFirebaseRootRef = null;
-    private Firebase mFirebaseEventRef = null;
-//    private ValueEventListener mFirebaseEventValueListener = null;
+    private FirebaseUtility mFirebaseUtility;
     private EventListAdapter mEventListAdapter;
 
+    private ListView mListView;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -50,12 +51,7 @@ public class EventBrowseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FIREBASE_URL = getResources().getString(R.string.firebase_url);
-        Log.i(LOG_TAG, " FIREBASE_URL " + FIREBASE_URL);
-        // Setup our Firebase mFirebaseRef
-        mFirebaseRootRef = new Firebase(FIREBASE_URL).getRoot();
-        mFirebaseEventRef = new Firebase(FIREBASE_URL).child("event");
+        mFirebaseUtility = FirebaseUtility.getInstance(getResources());
     }
 
 
@@ -65,11 +61,41 @@ public class EventBrowseFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_event_browse, container, false);
 
-        final ListView listView = (ListView) rootView.findViewById(R.id.listview_event);
+        mListView = (ListView) rootView.findViewById(R.id.listview_event);
+        Button doneButton = (Button) rootView.findViewById(R.id.buttonEventDone);
+        Button createButton = (Button) rootView.findViewById(R.id.buttonEventCreate);
+
 
         String userId = Utility.getLoggedInUserId(this.getContext());
-        mEventListAdapter = new EventListAdapter(mFirebaseEventRef.limit(50), this.getActivity(), R.layout.list_item_event, userId);
-        listView.setAdapter(mEventListAdapter);
+        mEventListAdapter = new EventListAdapter(mFirebaseUtility.getEventReference().limit(50), this.getActivity(), R.layout.list_item_event, userId);
+        mListView.setAdapter(mEventListAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                FunEvent event = (FunEvent) adapterView.getItemAtPosition(position);
+                if (event != null) {
+                    ((Callback) getActivity()).onItemSelected(event.getEventId());
+                }
+
+            }
+        });
+
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBackToMain();
+            }
+        });
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goEventCreate();
+            }
+        });
+
 
         return rootView;
     }
@@ -87,20 +113,27 @@ public class EventBrowseFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
+    public interface Callback {
+        public void onItemSelected(String eventId);
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    HELPER FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////
 
-
     private void goBackToMain() {
-        Intent afterAuthenticatedIntent = new Intent(this.getActivity(), MainActivity.class);
-        startActivity(afterAuthenticatedIntent);
+        Intent intent = new Intent(this.getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 
+    private void goEventCreate() {
+        Intent intent = new Intent(this.getActivity(), EventCreateActivity.class);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 
 }

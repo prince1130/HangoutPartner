@@ -28,7 +28,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Title"
+                    android:text="Title  "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date"
+                    android:text="Date  "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time"
+                    android:text="Time  "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location"
+                    android:text="Location  "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detail"
+                    android:text="Detail  "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,6 +142,26 @@
 
             </LinearLayout>
 
+
+            <!--  ACCOUNT ID  -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event ID "
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewEventId"/>
+
+            </LinearLayout>
 
 
         </LinearLayout>

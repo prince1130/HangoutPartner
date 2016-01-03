@@ -29,14 +29,14 @@ public class MainActivityFragment extends Fragment {
         public final TextView textViewLoginStatus;
         public final TextView textViewLogin;
         public final TextView textViewEventBrowse;
-        public final TextView textViewEventCreate;
+//        public final TextView textViewEventCreate;
 
 
         public ViewHolder(View view) {
             textViewLoginStatus = (TextView) view.findViewById(R.id.login_status);
             textViewLogin = (TextView) view.findViewById(R.id.text_view_login);
             textViewEventBrowse = (TextView) view.findViewById(R.id.text_view_event_browse);
-            textViewEventCreate = (TextView) view.findViewById(R.id.text_view_event_create);
+//            textViewEventCreate = (TextView) view.findViewById(R.id.text_view_event_create);
         }
     }
 
@@ -78,6 +78,7 @@ public class MainActivityFragment extends Fragment {
         /**
          *   VIEW MESSAGES
          */
+/*
         viewHolderRef.textViewEventCreate.setText(R.string.action_event_create);
         viewHolderRef.textViewEventCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +86,7 @@ public class MainActivityFragment extends Fragment {
                 createEvent();
             }
         });
+*/
 
         return rootView;
     }
@@ -105,13 +107,13 @@ public class MainActivityFragment extends Fragment {
             viewHolderRef.textViewLoginStatus.setText("Connect with others through Interesting Events. Login to start the Fun. ");
             viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
             viewHolderRef.textViewEventBrowse.setVisibility(View.GONE);
-            viewHolderRef.textViewEventCreate.setVisibility(View.GONE);
+//            viewHolderRef.textViewEventCreate.setVisibility(View.GONE);
         } else {
             // Use easy to read DISPLAY NAME instead of ID.
             viewHolderRef.textViewLoginStatus.setText("Welcome back !");
             viewHolderRef.textViewLogin.setVisibility(View.GONE);
             viewHolderRef.textViewEventBrowse.setVisibility(View.VISIBLE);
-            viewHolderRef.textViewEventCreate.setVisibility(View.VISIBLE);
+//            viewHolderRef.textViewEventCreate.setVisibility(View.VISIBLE);
         }
 
         super.onStart();

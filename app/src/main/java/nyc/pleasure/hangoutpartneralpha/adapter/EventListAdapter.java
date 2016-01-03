@@ -49,6 +49,7 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
         ((TextView) view.findViewById(R.id.textView_title)).setText(event.getTitle());
         ((TextView) view.findViewById(R.id.textView_location)).setText(event.getLocation());
         ((TextView) view.findViewById(R.id.textView_time)).setText(converTime(event.getStartTime()));
+        ((TextView) view.findViewById(R.id.textView_event_id)).setText(event.getEventId());
 
     }
 
