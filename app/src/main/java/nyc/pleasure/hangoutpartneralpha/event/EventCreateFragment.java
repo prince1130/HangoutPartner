@@ -1,6 +1,8 @@
 package nyc.pleasure.hangoutpartneralpha.event;
 
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-import nyc.pleasure.hangoutpartneralpha.MainActivity;
+import java.util.Calendar;
+
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.Utility;
 import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
@@ -20,7 +26,8 @@ import nyc.pleasure.hangoutpartneralpha.obj.FunEvent;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventCreateFragment extends Fragment {
+public class EventCreateFragment extends Fragment
+        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     public static final String LOG_TAG = EventCreateFragment.class.getSimpleName();
 
@@ -32,8 +39,10 @@ public class EventCreateFragment extends Fragment {
     ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail   buttonEventSave   buttonEventCancel
     public static class ViewHolder {
         public final EditText editTextTitle;
-        public final EditText editTextEventDate;
-        public final EditText editTextEventTime;
+        public final TextView textViewEventDate;
+        public final TextView textViewEventTime;
+        public final Button buttonEventDate;
+        public final Button buttonEventTime;
         public final EditText editTextLocation;
         public final EditText editTextEventDetail;
         public final Button buttonEventSave;
@@ -41,14 +50,28 @@ public class EventCreateFragment extends Fragment {
 
         public ViewHolder(View view) {
             editTextTitle = (EditText) view.findViewById(R.id.editTextTitle);
-            editTextEventDate = (EditText) view.findViewById(R.id.editTextEventDate);
-            editTextEventTime = (EditText) view.findViewById(R.id.editTextEventTime);
+            textViewEventDate = (TextView) view.findViewById(R.id.textViewEventDate);
+            textViewEventTime = (TextView) view.findViewById(R.id.textViewEventTime);
+            buttonEventDate = (Button) view.findViewById(R.id.buttonEventDate);
+            buttonEventTime = (Button) view.findViewById(R.id.buttonEventTime);
             editTextLocation = (EditText) view.findViewById(R.id.editTextLocation);
             editTextEventDetail = (EditText) view.findViewById(R.id.editTextEventDetail);
             buttonEventSave = (Button) view.findViewById(R.id.buttonEventSave);
             buttonEventCancel = (Button) view.findViewById(R.id.buttonEventCancel);
         }
     }
+
+    private final static Integer DEFAULT_YEAR = 2016;
+    private final static Integer DEFAULT_MONTH = 12;
+    private final static Integer DEFAULT_DAY = 31;
+    private final static Integer DEFAULT_HOUR = 18;
+    private final static Integer DEFAULT_MINUTE = 30;
+
+    private Integer selectedYear = DEFAULT_YEAR;
+    private Integer selectedMonth = DEFAULT_MONTH;
+    private Integer selectedDay = DEFAULT_DAY;
+    private Integer selectedHour = DEFAULT_HOUR;
+    private Integer selectedMin = DEFAULT_MINUTE;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    PERSISTENCE
@@ -80,6 +103,23 @@ public class EventCreateFragment extends Fragment {
         viewHolderRef = new ViewHolder(rootView);
 //        rootView.setTag(viewHolderRef);
 
+        viewHolderRef.textViewEventDate.setText(DEFAULT_YEAR + "-" + DEFAULT_MONTH + "-" + DEFAULT_DAY);
+        viewHolderRef.textViewEventTime.setText(DEFAULT_HOUR + ":" + DEFAULT_MINUTE);
+
+        viewHolderRef.buttonEventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+            }
+        });
+
+        viewHolderRef.buttonEventTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog(v);
+            }
+        });
+
         viewHolderRef.buttonEventSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,10 +137,9 @@ public class EventCreateFragment extends Fragment {
         return rootView;
     }
 
-
-/////////////////////////////////////////////////////////////////////////////////////
-////    HELPER FUNCTIONS
-/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// CLICK ACTION FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail   buttonEventSave   buttonEventCancel
 
@@ -112,9 +151,7 @@ public class EventCreateFragment extends Fragment {
         event.setLocation(viewHolder.editTextLocation.getText().toString());
         event.setDetail(viewHolder.editTextEventDetail.getText().toString());
 
-        String date = viewHolder.editTextEventDate.getText().toString();
-        String time = viewHolder.editTextEventTime.getText().toString();
-        event.setStartTime(convertTime(date, time));
+        event.setStartTime(convertTime(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMin));
 
         Long eventId = event.getCreatedTime();
         event.setEventId(eventId.toString());
@@ -123,14 +160,56 @@ public class EventCreateFragment extends Fragment {
         goBrowseEvent();
     }
 
-    private long convertTime(String date, String time) {
-        return System.currentTimeMillis();
-    }
-
 
     private void goBrowseEvent() {
         Intent intent = new Intent(this.getActivity(), EventBrowseActivity.class);
         startActivity(intent);
     }
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    CALLBACK FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+    public void showDatePickerDialog(View v) {
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, DEFAULT_YEAR, (DEFAULT_MONTH - 1), DEFAULT_DAY);
+        dialog.show();
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        // Do something with the time chosen by the user
+        month++;
+        viewHolderRef.textViewEventDate.setText(year + "-" + month + "-" + day);
+        selectedYear = year;
+        selectedMonth = month;
+        selectedDay = day;
+    }
+
+
+    public void showTimePickerDialog(View v) {
+        TimePickerDialog dialog = new TimePickerDialog(getContext(), this, DEFAULT_HOUR, DEFAULT_MINUTE, true);
+        dialog.show();
+    }
+
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // Do something with the time chosen by the user
+        viewHolderRef.textViewEventTime.setText(hourOfDay + ":" + minute);
+        selectedHour = hourOfDay;
+        selectedMin = minute;
+    }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    HELPER FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+    private long convertTime(int year, int month, int day, int hour, int min) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day, hour, min);
+        return cal.getTimeInMillis();
+    }
+
+
 
 }

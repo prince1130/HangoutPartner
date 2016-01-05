@@ -48,26 +48,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewEventDate"/>
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/editTextEventDate" />
+                android:text="Select Date "
+                android:id="@+id/buttonEventDate" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
+                android:layout_marginLeft="20dp"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewEventTime" />
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/editTextEventTime" />
+                android:text="Select Time "
+                android:id="@+id/buttonEventTime" />
 
         </LinearLayout>
 

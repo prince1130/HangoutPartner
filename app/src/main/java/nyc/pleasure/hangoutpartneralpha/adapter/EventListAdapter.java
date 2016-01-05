@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.firebase.client.Query;
 
+import java.util.Calendar;
+
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.obj.FunEvent;
 
@@ -48,13 +50,31 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
         ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail
         ((TextView) view.findViewById(R.id.textView_title)).setText(event.getTitle());
         ((TextView) view.findViewById(R.id.textView_location)).setText(event.getLocation());
-        ((TextView) view.findViewById(R.id.textView_time)).setText(converTime(event.getStartTime()));
+        ((TextView) view.findViewById(R.id.textView_date)).setText(getDateString(event.getStartTime()));
         ((TextView) view.findViewById(R.id.textView_event_id)).setText(event.getEventId());
 
     }
 
-    private String converTime(Long time) {
-        return "Jan 25, 2016";
+    private String getDateString(Long time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+        Integer year = c.get(Calendar.YEAR);
+        Integer month = c.get(Calendar.MONTH) + 1;
+        Integer day = c.get(Calendar.DAY_OF_MONTH);
+
+        String result = year.toString();
+        if(month < 10) {
+            result = result + "-0" + month;
+        } else {
+            result = result + "-" + month ;
+        }
+        if(day < 10) {
+            result = result + "-0" + day;
+        } else {
+            result = result + "-" + day ;
+        }
+
+        return result;
     }
 
 }

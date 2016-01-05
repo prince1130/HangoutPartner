@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HangoutPartnerAlpha</string>
+    <string name="app_name">HangoutPartner</string>
 
     <string name="action_login"> Login</string>
     <string name="action_event_browse">Browse Events</string>

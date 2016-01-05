@@ -18,6 +18,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Calendar;
+
 import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
@@ -139,9 +141,9 @@ public class EventDetailFragment extends Fragment {
         mFirebaseEventRef.removeEventListener(mFirebaseEventValueListener);
     }
 
-/////////////////////////////////////////////////////////////////////////////////////
-////    HELPER FUNCTIONS
-/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// CLICK ACTION FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void goBackToEventBrowse() {
         Intent intent = new Intent(this.getActivity(), EventBrowseActivity.class);
@@ -153,21 +155,61 @@ public class EventDetailFragment extends Fragment {
         startActivity(intent);
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    HELPER FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+
     private void updateView(ViewHolder viewHolder, FunEvent event) {
         viewHolder.textViewTitle.setText(event.getTitle());
-        viewHolder.textViewEventDate.setText(parseDate(event.getEndTime()));
-        viewHolder.textViewEventTime.setText(parseTime(event.getEndTime()));
+        viewHolder.textViewEventDate.setText(getDateString(event.getStartTime()));
+        viewHolder.textViewEventTime.setText(getTimeString(event.getStartTime()));
         viewHolder.textViewLocation.setText(event.getLocation());
         viewHolder.textViewEventDetail.setText(event.getDetail());
 
         viewHolder.textViewEventId.setText(event.getEventId());
     }
 
-    private String parseDate(Long time) {
-        return "2015-01-01";
+
+    private String getDateString(Long time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+        Integer year = c.get(Calendar.YEAR);
+        Integer month = c.get(Calendar.MONTH) + 1;
+        Integer day = c.get(Calendar.DAY_OF_MONTH);
+
+        String result = year.toString();
+        if(month < 10) {
+            result = result + "-0" + month;
+        } else {
+            result = result + "-" + month ;
+        }
+        if(day < 10) {
+            result = result + "-0" + day;
+        } else {
+            result = result + "-" + day ;
+        }
+        return result;
     }
-    private String parseTime(Long time) {
-        return "11:11:11";
+
+    private String getTimeString(Long time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+        Integer hour = c.get(Calendar.HOUR_OF_DAY);
+        Integer min = c.get(Calendar.MINUTE);
+
+        String result = null;
+        if(hour < 10) {
+            result = "0" + hour ;
+        } else {
+            result = "" + hour ;
+        }
+        if(min < 10) {
+            result = result + ":0" + min ;
+        } else {
+            result = result + ":" + min ;
+        }
+        return result;
     }
 
 

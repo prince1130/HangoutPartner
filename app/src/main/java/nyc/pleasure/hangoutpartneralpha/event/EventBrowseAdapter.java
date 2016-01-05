@@ -23,13 +23,13 @@ public class EventBrowseAdapter extends CursorAdapter {
     public static class ViewHolder {
         public final TextView titleView;
         public final TextView locationView;
-        public final TextView timeView;
+        public final TextView dateView;
 //        public final TextView createrView;
 
         public ViewHolder(View view) {
             titleView = (TextView) view.findViewById(R.id.textView_title);
             locationView = (TextView) view.findViewById(R.id.textView_location);
-            timeView = (TextView) view.findViewById(R.id.textView_time);
+            dateView = (TextView) view.findViewById(R.id.textView_date);
 //            createrView = (TextView) view.findViewById(R.id.event_creater);
         }
     }
@@ -45,7 +45,7 @@ public class EventBrowseAdapter extends CursorAdapter {
 
         viewHolder.titleView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_TITLE));
         viewHolder.locationView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_LOCATION));
-        viewHolder.timeView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_DATE));
+        viewHolder.dateView.setText(cursor.getString(EventBrowseFragmentOld.COL_EVENT_DATE));
 //        viewHolder.createrView.setText(cursor.getString(EventBrowseFragmentOld.COL_USER_DISPLAY));
     }
 
