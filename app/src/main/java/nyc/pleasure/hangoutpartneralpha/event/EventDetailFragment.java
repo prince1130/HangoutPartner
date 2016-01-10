@@ -45,20 +45,22 @@ public class EventDetailFragment extends Fragment {
         public final TextView textViewEventDate;
         public final TextView textViewEventTime;
         public final TextView textViewLocation;
+        public final TextView textViewEventPartner;
         public final TextView textViewEventDetail;
         public final TextView textViewEventId;
         public final Button buttonEventBack;
-        public final Button buttonEventMessage;
+        public final Button buttonEventContact;
 
         public ViewHolder(View view) {
             textViewTitle = (TextView) view.findViewById(R.id.editTextTitle);
             textViewEventDate = (TextView) view.findViewById(R.id.editTextEventDate);
             textViewEventTime = (TextView) view.findViewById(R.id.editTextEventTime);
             textViewLocation = (TextView) view.findViewById(R.id.editTextLocation);
+            textViewEventPartner = (TextView) view.findViewById(R.id.textViewEventPartner);
             textViewEventDetail = (TextView) view.findViewById(R.id.editTextEventDetail);
             textViewEventId = (TextView) view.findViewById(R.id.textViewEventId);
             buttonEventBack = (Button) view.findViewById(R.id.buttonEventBack);
-            buttonEventMessage = (Button) view.findViewById(R.id.buttonEventMessage);
+            buttonEventContact = (Button) view.findViewById(R.id.buttonEventContact);
         }
     }
 
@@ -103,10 +105,10 @@ public class EventDetailFragment extends Fragment {
             }
         });
 
-        viewHolderRef.buttonEventMessage.setOnClickListener(new View.OnClickListener() {
+        viewHolderRef.buttonEventContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatWithEventHost();
+                contactEventHost();
             }
         });
 
@@ -150,7 +152,7 @@ public class EventDetailFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void chatWithEventHost() {
+    private void contactEventHost() {
         Intent intent = new Intent(this.getActivity(), ChatActivity.class);
         startActivity(intent);
     }
@@ -165,6 +167,7 @@ public class EventDetailFragment extends Fragment {
         viewHolder.textViewEventDate.setText(getDateString(event.getStartTime()));
         viewHolder.textViewEventTime.setText(getTimeString(event.getStartTime()));
         viewHolder.textViewLocation.setText(event.getLocation());
+        viewHolder.textViewEventPartner.setText(event.getCreaterUserDisplayName());
         viewHolder.textViewEventDetail.setText(event.getDetail());
 
         viewHolder.textViewEventId.setText(event.getEventId());

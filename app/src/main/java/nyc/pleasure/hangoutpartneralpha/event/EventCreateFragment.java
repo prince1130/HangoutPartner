@@ -147,6 +147,7 @@ public class EventCreateFragment extends Fragment
         FunEvent event = new FunEvent();
         event.setCreatedTime(System.currentTimeMillis());
         event.setCreaterUserId(Utility.getLoggedInUserId(this.getContext()));
+        event.setCreaterUserDisplayName(Utility.getLoggedInUserDisplayName(this.getContext()));
         event.setTitle(viewHolder.editTextTitle.getText().toString());
         event.setLocation(viewHolder.editTextLocation.getText().toString());
         event.setDetail(viewHolder.editTextEventDetail.getText().toString());

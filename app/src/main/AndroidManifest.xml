@@ -51,6 +51,10 @@
         <activity
             android:name=".event.EventCreateActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".event.EventDetailActivity"
+            android:parentActivityName=".event.EventBrowseActivity">
+        </activity>
         <activity
             android:name=".AccountActivity"
             android:parentActivityName=".MainActivity" />
@@ -92,7 +96,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".event.EventDetailActivity"></activity>
     </application>
 
 </manifest>

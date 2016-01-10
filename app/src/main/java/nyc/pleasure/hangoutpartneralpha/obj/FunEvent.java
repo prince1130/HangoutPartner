@@ -7,6 +7,7 @@ public class FunEvent {
 
     private String eventId = null;
     private String createrUserId = null;
+    private String createrUserDisplayName = null;
     private Long createdTime = null;
     private String title = null;
     private String detail = null;
@@ -31,6 +32,14 @@ public class FunEvent {
 
     public void setCreaterUserId(String createrUserId) {
         this.createrUserId = createrUserId;
+    }
+
+    public String getCreaterUserDisplayName() {
+        return createrUserDisplayName;
+    }
+
+    public void setCreaterUserDisplayName(String createrUserDisplayName) {
+        this.createrUserDisplayName = createrUserDisplayName;
     }
 
     public Long getCreatedTime() {

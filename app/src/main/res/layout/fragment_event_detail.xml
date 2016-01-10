@@ -78,7 +78,6 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp">
 
                 <TextView
@@ -95,12 +94,31 @@
             </LinearLayout>
 
 
+            <!--  Partner  -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partner  "
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/textViewEventPartner"/>
+
+            </LinearLayout>
+
             <!--  DETAIL  -->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp">
 
                 <TextView
@@ -134,8 +152,8 @@
                     android:layout_gravity="center"/>
 
                 <Button
-                    android:id="@+id/buttonEventMessage"
-                    android:text="Message"
+                    android:id="@+id/buttonEventContact"
+                    android:text="Contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
