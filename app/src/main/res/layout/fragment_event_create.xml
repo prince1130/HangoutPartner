@@ -87,13 +87,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewLocationName" />
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:id="@+id/editTextLocation"/>
+                android:text="Select Location "
+                android:id="@+id/buttonEventLocation"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address "
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewLocationAddress" />
         </LinearLayout>
 
 

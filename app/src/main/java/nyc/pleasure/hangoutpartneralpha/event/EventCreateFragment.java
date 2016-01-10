@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 
@@ -31,6 +39,8 @@ public class EventCreateFragment extends Fragment
 
     public static final String LOG_TAG = EventCreateFragment.class.getSimpleName();
 
+    int PLACE_PICKER_REQUEST = 10;
+
 /////////////////////////////////////////////////////////////////////////////////////
 ////    VIEW
 /////////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +53,9 @@ public class EventCreateFragment extends Fragment
         public final TextView textViewEventTime;
         public final Button buttonEventDate;
         public final Button buttonEventTime;
-        public final EditText editTextLocation;
+        public final TextView textViewLocationName;
+        public final TextView textViewLocationAddress;
+        public final Button buttonEventLocation;
         public final EditText editTextEventDetail;
         public final Button buttonEventSave;
         public final Button buttonEventCancel;
@@ -54,7 +66,9 @@ public class EventCreateFragment extends Fragment
             textViewEventTime = (TextView) view.findViewById(R.id.textViewEventTime);
             buttonEventDate = (Button) view.findViewById(R.id.buttonEventDate);
             buttonEventTime = (Button) view.findViewById(R.id.buttonEventTime);
-            editTextLocation = (EditText) view.findViewById(R.id.editTextLocation);
+            textViewLocationName = (TextView) view.findViewById(R.id.textViewLocationName);
+            textViewLocationAddress = (TextView) view.findViewById(R.id.textViewLocationAddress);
+            buttonEventLocation = (Button) view.findViewById(R.id.buttonEventLocation);
             editTextEventDetail = (EditText) view.findViewById(R.id.editTextEventDetail);
             buttonEventSave = (Button) view.findViewById(R.id.buttonEventSave);
             buttonEventCancel = (Button) view.findViewById(R.id.buttonEventCancel);
@@ -120,6 +134,13 @@ public class EventCreateFragment extends Fragment
             }
         });
 
+        viewHolderRef.buttonEventLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickLocation();
+            }
+        });
+
         viewHolderRef.buttonEventSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,11 +158,46 @@ public class EventCreateFragment extends Fragment
         return rootView;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == this.getActivity().RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this.getActivity());
+                LatLng placeLL = place.getLatLng();
+                String placeAdd = String.valueOf(place.getAddress());
+                String placeName = String.valueOf(place.getName());
+
+                viewHolderRef.textViewLocationName.setText(placeName);
+                viewHolderRef.textViewLocationAddress.setText(placeAdd);
+
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this.getActivity(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail   buttonEventSave   buttonEventCancel
+
+    private void pickLocation() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = builder.build(this.getActivity());
+            if (intent.resolveActivity(this.getActivity().getPackageManager()) != null) {
+                startActivityForResult(intent, PLACE_PICKER_REQUEST);
+            }
+        } catch (GooglePlayServicesRepairableException ex) {
+            Log.e(LOG_TAG, "pickLocation() " + ex);
+        } catch (GooglePlayServicesNotAvailableException ex) {
+            Log.e(LOG_TAG, "pickLocation() " + ex);
+        }
+    }
 
     private void doEventCreate(ViewHolder viewHolder) {
         FunEvent event = new FunEvent();
@@ -149,10 +205,11 @@ public class EventCreateFragment extends Fragment
         event.setCreaterUserId(Utility.getLoggedInUserId(this.getContext()));
         event.setCreaterUserDisplayName(Utility.getLoggedInUserDisplayName(this.getContext()));
         event.setTitle(viewHolder.editTextTitle.getText().toString());
-        event.setLocation(viewHolder.editTextLocation.getText().toString());
         event.setDetail(viewHolder.editTextEventDetail.getText().toString());
 
         event.setStartTime(convertTime(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMin));
+        event.setLocationName(viewHolder.textViewLocationName.getText().toString());
+        event.setLocationAddress(viewHolder.textViewLocationAddress.getText().toString());
 
         Long eventId = event.getCreatedTime();
         event.setEventId(eventId.toString());

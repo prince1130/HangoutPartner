@@ -49,7 +49,7 @@ public class EventListAdapter  extends FirebaseListAdapter<FunEvent> {
         */
         ////  editTextTitle   editTextEventDate  editTextEventTime   editTextLocation   editTextEventDetail
         ((TextView) view.findViewById(R.id.textView_title)).setText(event.getTitle());
-        ((TextView) view.findViewById(R.id.textView_location)).setText(event.getLocation());
+        ((TextView) view.findViewById(R.id.textView_location)).setText(event.getLocationName());
         ((TextView) view.findViewById(R.id.textView_date)).setText(getDateString(event.getStartTime()));
         ((TextView) view.findViewById(R.id.textView_event_id)).setText(event.getEventId());
 

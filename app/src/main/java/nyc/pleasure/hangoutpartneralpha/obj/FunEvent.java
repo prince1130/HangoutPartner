@@ -13,7 +13,8 @@ public class FunEvent {
     private String detail = null;
     private Long startTime = null;
     private Long endTime = null;
-    private String location = null;
+    private String locationName = null;
+    private String locationAddress = null;
     private String descriptionIdealPartner = null;
     private String descriptionReasonJoinMe = null;
 
@@ -82,12 +83,20 @@ public class FunEvent {
         this.endTime = endTime;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
     }
 
     public String getDescriptionIdealPartner() {

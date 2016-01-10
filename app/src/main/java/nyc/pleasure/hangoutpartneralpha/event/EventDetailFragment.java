@@ -44,7 +44,8 @@ public class EventDetailFragment extends Fragment {
         public final TextView textViewTitle;
         public final TextView textViewEventDate;
         public final TextView textViewEventTime;
-        public final TextView textViewLocation;
+        public final TextView textViewLocationName;
+        public final TextView textViewLocationAddress;
         public final TextView textViewEventPartner;
         public final TextView textViewEventDetail;
         public final TextView textViewEventId;
@@ -55,7 +56,8 @@ public class EventDetailFragment extends Fragment {
             textViewTitle = (TextView) view.findViewById(R.id.editTextTitle);
             textViewEventDate = (TextView) view.findViewById(R.id.editTextEventDate);
             textViewEventTime = (TextView) view.findViewById(R.id.editTextEventTime);
-            textViewLocation = (TextView) view.findViewById(R.id.editTextLocation);
+            textViewLocationName = (TextView) view.findViewById(R.id.textViewLocationName);
+            textViewLocationAddress = (TextView) view.findViewById(R.id.textViewLocationAddress);
             textViewEventPartner = (TextView) view.findViewById(R.id.textViewEventPartner);
             textViewEventDetail = (TextView) view.findViewById(R.id.editTextEventDetail);
             textViewEventId = (TextView) view.findViewById(R.id.textViewEventId);
@@ -166,7 +168,8 @@ public class EventDetailFragment extends Fragment {
         viewHolder.textViewTitle.setText(event.getTitle());
         viewHolder.textViewEventDate.setText(getDateString(event.getStartTime()));
         viewHolder.textViewEventTime.setText(getTimeString(event.getStartTime()));
-        viewHolder.textViewLocation.setText(event.getLocation());
+        viewHolder.textViewLocationName.setText(event.getLocationName());
+        viewHolder.textViewLocationAddress.setText(event.getLocationAddress());
         viewHolder.textViewEventPartner.setText(event.getCreaterUserDisplayName());
         viewHolder.textViewEventDetail.setText(event.getDetail());
 
