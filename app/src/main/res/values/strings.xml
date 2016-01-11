@@ -26,4 +26,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
 </resources>

@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -28,7 +31,8 @@ import nyc.pleasure.hangoutpartneralpha.obj.User;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class AccountFragment extends Fragment
+        implements DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
     public static final String LOG_TAG = AccountFragment.class.getSimpleName();
 
@@ -41,7 +45,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
         public final EditText editTextFirstName;
         public final EditText editTextLastName;
         public final EditText editTextDisplayName;
-        public final EditText editTextGender;
+        public final Spinner spinnerGender;
         public final Button buttonBirthDate;
         public final EditText editTextEmail;
         public final TextView textViewAcctId;
@@ -52,7 +56,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
             editTextFirstName = (EditText) view.findViewById(R.id.editTextFirstName);
             editTextLastName = (EditText) view.findViewById(R.id.editTextLastName);
             editTextDisplayName = (EditText) view.findViewById(R.id.editTextDisplayName);
-            editTextGender = (EditText) view.findViewById(R.id.editTextGender);
+            spinnerGender = (Spinner) view.findViewById(R.id.spinnerGender);
             buttonBirthDate = (Button) view.findViewById(R.id.buttonBirthDate);
             editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
             textViewAcctId = (TextView) view.findViewById(R.id.textViewAcctId);
@@ -60,6 +64,8 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
             buttonCancel = (Button) view.findViewById(R.id.buttonCancel);
         }
     }
+
+    private ArrayAdapter<CharSequence> genderAdapter = null;
 
     private final static Integer DEFAULT_YEAR = 2016;
     private final static Integer DEFAULT_MONTH = 12;
@@ -75,8 +81,8 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
 
     /* A reference to the Firebase */
     private Firebase mFirebaseUserRef;
-    private ValueEventListener mFirebaseUserValueListener = null;
-    private String mUserId;
+//    private ValueEventListener mFirebaseUserValueListener = null;
+//    private String mUserId;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -90,7 +96,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Setup our Firebase mFirebaseRef
-        mUserId = Utility.getLoggedInUserId(this.getContext());
+        String mUserId = Utility.getLoggedInUserId(this.getContext());
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(mUserId);
     }
 
@@ -102,6 +108,17 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
         View rootView = inflater.inflate(R.layout.fragment_account, container, false);
         viewHolderRef = new ViewHolder(rootView);
 //        rootView.setTag(viewHolderRef);
+
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        genderAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.gender_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        viewHolderRef.spinnerGender.setAdapter(genderAdapter);
+        viewHolderRef.spinnerGender.setOnItemSelectedListener(this);
+
 
         viewHolderRef.buttonBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +144,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
 
         //// IF THE USER DATA EXIST ALREADY. RETRIEVE THEM AND POPULATE THE UI WITH EXISTING DATA.
         //// OTHERWISE, DO NOT POPULATE ANYTHING.
-        mFirebaseUserValueListener = mFirebaseUserRef.addValueEventListener(new ValueEventListener() {
+        mFirebaseUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(LOG_TAG, "onDataChange. Rebuild UI with latest data. " + dataSnapshot.toString());
@@ -152,7 +169,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mFirebaseUserRef.removeEventListener(mFirebaseUserValueListener);
+//        mFirebaseUserRef.removeEventListener(mFirebaseUserValueListener);
     }
 
 
@@ -170,7 +187,10 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
         user.setLastName(viewHolder.editTextLastName.getText().toString());
         user.setDisplayName(viewHolder.editTextDisplayName.getText().toString());
         user.setEmail(viewHolder.editTextEmail.getText().toString());
-        user.setGender(viewHolder.editTextGender.getText().toString());
+
+        String gen = (String)viewHolder.spinnerGender.getSelectedItem();
+        user.setGender(gen);
+
         user.setBirthDate(convertTime(selectedYear, selectedMonth - 1, selectedDay, 0, 0));
 
         mFirebaseUserRef.setValue(user);
@@ -191,6 +211,7 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
 /////////////////////////////////////////////////////////////////////////////////////
 ////    CALLBACK FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////
+
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the time chosen by the user
         month++;
@@ -200,7 +221,13 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
         selectedDay = day;
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    HELPER FUNCTIONS
@@ -211,7 +238,10 @@ public class AccountFragment extends Fragment implements DatePickerDialog.OnDate
         viewHolder.editTextLastName.setText(user.getLastName());
         viewHolder.editTextDisplayName.setText(user.getDisplayName());
         viewHolder.editTextEmail.setText(user.getEmail());
-        viewHolder.editTextGender.setText(user.getGender());
+
+        int genPosition = genderAdapter.getPosition(user.getGender());
+        viewHolder.spinnerGender.setSelection(genPosition);
+
         Calendar c = Calendar.getInstance();
         if(user.getBirthDate() == null) {
             user.setBirthDate(convertTime(DEFAULT_YEAR, DEFAULT_MONTH - 1, DEFAULT_DAY, 0 , 0));
