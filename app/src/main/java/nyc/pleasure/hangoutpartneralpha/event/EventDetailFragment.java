@@ -1,6 +1,8 @@
 package nyc.pleasure.hangoutpartneralpha.event;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -22,6 +25,7 @@ import java.util.Calendar;
 
 import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
+import nyc.pleasure.hangoutpartneralpha.Utility;
 import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
 import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
 import nyc.pleasure.hangoutpartneralpha.obj.FunEvent;
@@ -51,6 +55,8 @@ public class EventDetailFragment extends Fragment {
         public final TextView textViewEventId;
         public final Button buttonEventBack;
         public final Button buttonEventContact;
+        public final LinearLayout ownerSection;
+        public final Button buttonEventDelete;
 
         public ViewHolder(View view) {
             textViewTitle = (TextView) view.findViewById(R.id.editTextTitle);
@@ -63,6 +69,8 @@ public class EventDetailFragment extends Fragment {
             textViewEventId = (TextView) view.findViewById(R.id.textViewEventId);
             buttonEventBack = (Button) view.findViewById(R.id.buttonEventBack);
             buttonEventContact = (Button) view.findViewById(R.id.buttonEventContact);
+            ownerSection = (LinearLayout) view.findViewById(R.id.ownerSection);
+            buttonEventDelete = (Button) view.findViewById(R.id.buttonEventDelete);
         }
     }
 
@@ -114,6 +122,12 @@ public class EventDetailFragment extends Fragment {
             }
         });
 
+        viewHolderRef.buttonEventDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildDeleteConfirmationDialog();
+            }
+        });
 
         mFirebaseEventValueListener = mFirebaseEventRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -159,6 +173,29 @@ public class EventDetailFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void doDeleteEvent() {
+        mFirebaseEventRef.setValue(null);
+        goBackToEventBrowse();
+    }
+
+    private void buildDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dialog_message_delete).setTitle(R.string.dialog_title_delete);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                doDeleteEvent();
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    HELPER FUNCTIONS
@@ -174,6 +211,15 @@ public class EventDetailFragment extends Fragment {
         viewHolder.textViewEventDetail.setText(event.getDetail());
 
         viewHolder.textViewEventId.setText(event.getEventId());
+
+        String id1 = Utility.getLoggedInUserId(this.getActivity());
+        String id2 = event.getCreaterUserId();
+        if(id1.equals(id2)) {
+            viewHolder.ownerSection.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.ownerSection.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 

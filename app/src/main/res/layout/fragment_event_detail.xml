@@ -146,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="100dp">
 
                 <Button
                     android:id="@+id/buttonEventBack"
@@ -183,6 +183,29 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewEventId"/>
 
+            </LinearLayout>
+
+            <!--  Owner Actions  -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible"
+                android:id="@+id/ownerSection">
+                <TextView
+                    android:id="@+id/textViewCreatorAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creator Actions "
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <Button
+                    android:id="@+id/buttonEventDelete"
+                    android:text="Delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
             </LinearLayout>
 
 

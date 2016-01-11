@@ -110,7 +110,7 @@ public class MainActivityFragment extends Fragment {
 //            viewHolderRef.textViewEventCreate.setVisibility(View.GONE);
         } else {
             // Use easy to read DISPLAY NAME instead of ID.
-            viewHolderRef.textViewLoginStatus.setText("Welcome back !");
+            viewHolderRef.textViewLoginStatus.setText("Welcome back " + userDisplayName + " !");
             viewHolderRef.textViewLogin.setVisibility(View.GONE);
             viewHolderRef.textViewEventBrowse.setVisibility(View.VISIBLE);
 //            viewHolderRef.textViewEventCreate.setVisibility(View.VISIBLE);

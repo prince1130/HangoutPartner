@@ -44,6 +44,7 @@ import java.util.Map;
 import nyc.pleasure.hangoutpartneralpha.MainActivity;
 import nyc.pleasure.hangoutpartneralpha.R;
 import nyc.pleasure.hangoutpartneralpha.Utility;
+import nyc.pleasure.hangoutpartneralpha.obj.User;
 
 /**
  * Created by Chien on 12/20/2015.
@@ -427,9 +428,33 @@ public class AuthActivity extends AppCompatActivity implements
 //        supportInvalidateOptionsMenu();
 
         Utility.setLoggedInUserId(this, name);
+        prepareUserDisplayName(name);
 
     }
 
+    private void prepareUserDisplayName(String userId) {
+        if(userId != null) {
+            mFirebaseRef.child("user").child(userId).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                     @Override
+                     public void onDataChange(DataSnapshot dataSnapshot) {
+                          User currentUser = dataSnapshot.getValue(User.class);
+                          if (currentUser != null) {
+                               setUserDisplayName(currentUser.getDisplayName());
+                          }
+                     }
+
+                     @Override
+                     public void onCancelled(FirebaseError firebaseError) {}
+                     }
+            );
+        } else {
+            setUserDisplayName("");
+        }
+    }
+    private void setUserDisplayName(String displayName) {
+        Utility.setLoggedInUserDisplayName(this, displayName);
+    }
 
 
     /**
