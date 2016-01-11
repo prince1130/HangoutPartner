@@ -1,6 +1,7 @@
 package nyc.pleasure.hangoutpartneralpha;
 
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +19,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Calendar;
+
 import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
 import nyc.pleasure.hangoutpartneralpha.obj.User;
 
@@ -24,7 +28,7 @@ import nyc.pleasure.hangoutpartneralpha.obj.User;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     public static final String LOG_TAG = AccountFragment.class.getSimpleName();
 
@@ -38,6 +42,7 @@ public class AccountFragment extends Fragment {
         public final EditText editTextLastName;
         public final EditText editTextDisplayName;
         public final EditText editTextGender;
+        public final Button buttonBirthDate;
         public final EditText editTextEmail;
         public final TextView textViewAcctId;
         public final Button buttonSave;
@@ -48,12 +53,21 @@ public class AccountFragment extends Fragment {
             editTextLastName = (EditText) view.findViewById(R.id.editTextLastName);
             editTextDisplayName = (EditText) view.findViewById(R.id.editTextDisplayName);
             editTextGender = (EditText) view.findViewById(R.id.editTextGender);
+            buttonBirthDate = (Button) view.findViewById(R.id.buttonBirthDate);
             editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
             textViewAcctId = (TextView) view.findViewById(R.id.textViewAcctId);
             buttonSave = (Button) view.findViewById(R.id.buttonSave);
             buttonCancel = (Button) view.findViewById(R.id.buttonCancel);
         }
     }
+
+    private final static Integer DEFAULT_YEAR = 2016;
+    private final static Integer DEFAULT_MONTH = 12;
+    private final static Integer DEFAULT_DAY = 31;
+
+    private Integer selectedYear = DEFAULT_YEAR;
+    private Integer selectedMonth = DEFAULT_MONTH;
+    private Integer selectedDay = DEFAULT_DAY;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    PERSISTENCE
@@ -88,6 +102,13 @@ public class AccountFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_account, container, false);
         viewHolderRef = new ViewHolder(rootView);
 //        rootView.setTag(viewHolderRef);
+
+        viewHolderRef.buttonBirthDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+            }
+        });
 
         viewHolderRef.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,19 +156,9 @@ public class AccountFragment extends Fragment {
     }
 
 
-/////////////////////////////////////////////////////////////////////////////////////
-////    HELPER FUNCTIONS
-/////////////////////////////////////////////////////////////////////////////////////
-
-    private void updateView(ViewHolder viewHolder, User user) {
-        viewHolder.editTextFirstName.setText(user.getFirstName());
-        viewHolder.editTextLastName.setText(user.getLastName());
-        viewHolder.editTextDisplayName.setText(user.getDisplayName());
-        viewHolder.editTextEmail.setText(user.getEmail());
-        viewHolder.editTextGender.setText(user.getGender());
-
-        viewHolder.textViewAcctId.setText(user.getUserId());
-    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// CLICK ACTION FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void doAccountSave(ViewHolder viewHolder) {
         String userId = Utility.getLoggedInUserId(this.getContext());
@@ -160,6 +171,7 @@ public class AccountFragment extends Fragment {
         user.setDisplayName(viewHolder.editTextDisplayName.getText().toString());
         user.setEmail(viewHolder.editTextEmail.getText().toString());
         user.setGender(viewHolder.editTextGender.getText().toString());
+        user.setBirthDate(convertTime(selectedYear, selectedMonth - 1, selectedDay, 0, 0));
 
         mFirebaseUserRef.setValue(user);
         goBackToMain();
@@ -170,5 +182,50 @@ public class AccountFragment extends Fragment {
         startActivity(afterAuthenticatedIntent);
     }
 
+    public void showDatePickerDialog(View v) {
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, selectedYear, selectedMonth, selectedDay);
+        dialog.show();
+    }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    CALLBACK FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        // Do something with the time chosen by the user
+        month++;
+        viewHolderRef.buttonBirthDate.setText(year + "-" + month + "-" + day);
+        selectedYear = year;
+        selectedMonth = month;
+        selectedDay = day;
+    }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    HELPER FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+
+    private void updateView(ViewHolder viewHolder, User user) {
+        viewHolder.editTextFirstName.setText(user.getFirstName());
+        viewHolder.editTextLastName.setText(user.getLastName());
+        viewHolder.editTextDisplayName.setText(user.getDisplayName());
+        viewHolder.editTextEmail.setText(user.getEmail());
+        viewHolder.editTextGender.setText(user.getGender());
+        Calendar c = Calendar.getInstance();
+        if(user.getBirthDate() == null) {
+            user.setBirthDate(convertTime(DEFAULT_YEAR, DEFAULT_MONTH - 1, DEFAULT_DAY, 0 , 0));
+        }
+        c.setTimeInMillis(user.getBirthDate());
+        viewHolderRef.buttonBirthDate.setText(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1)+ "-" + c.get(Calendar.DAY_OF_MONTH));
+
+        viewHolder.textViewAcctId.setText(user.getUserId());
+    }
+
+    private long convertTime(int year, int month, int day, int hour, int min) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day, hour, min);
+        return cal.getTimeInMillis();
+    }
 
 }

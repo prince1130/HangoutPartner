@@ -207,7 +207,7 @@ public class EventCreateFragment extends Fragment
         event.setTitle(viewHolder.editTextTitle.getText().toString());
         event.setDetail(viewHolder.editTextEventDetail.getText().toString());
 
-        event.setStartTime(convertTime(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMin));
+        event.setStartTime(convertTime(selectedYear, selectedMonth - 1, selectedDay, selectedHour, selectedMin));
         event.setLocationName(viewHolder.textViewLocationName.getText().toString());
         event.setLocationAddress(viewHolder.textViewLocationAddress.getText().toString());
 
@@ -230,7 +230,7 @@ public class EventCreateFragment extends Fragment
 
 
     public void showDatePickerDialog(View v) {
-        DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, DEFAULT_YEAR, (DEFAULT_MONTH - 1), DEFAULT_DAY);
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, selectedYear, selectedMonth, selectedDay);
         dialog.show();
     }
 
