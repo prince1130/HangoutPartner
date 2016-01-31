@@ -17,6 +17,9 @@
     <!-- Permissions required by the Place Picker -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- Permissions required by the AMAZON S3 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MainApplication"
@@ -55,13 +58,14 @@
         <activity
             android:name=".event.EventCreateActivity"
             android:parentActivityName=".MainActivity" />
-
-        <activity android:name=".event.EventDetailActivity"
-            android:parentActivityName=".event.EventBrowseActivity">
-        </activity>
+        <activity
+            android:name=".event.EventDetailActivity"
+            android:parentActivityName=".event.EventBrowseActivity"></activity>
         <activity
             android:name=".AccountActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".MediaUploadActivity"></activity>
 
         <provider
             android:name=".data.EventProvider"
@@ -93,6 +97,11 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <!-- Amazon S3 -->
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -101,7 +110,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBQoIl0920c3xGQcVEytxCtlKx-eLIEnWM"/>
+            android:value="AIzaSyBQoIl0920c3xGQcVEytxCtlKx-eLIEnWM" />
 
     </application>
 

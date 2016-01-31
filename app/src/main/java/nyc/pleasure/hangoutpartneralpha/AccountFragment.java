@@ -49,6 +49,7 @@ public class AccountFragment extends Fragment
         public final Button buttonBirthDate;
         public final EditText editTextEmail;
         public final TextView textViewAcctId;
+        public final Button buttonMedia;
         public final Button buttonSave;
         public final Button buttonCancel;
 
@@ -60,6 +61,7 @@ public class AccountFragment extends Fragment
             buttonBirthDate = (Button) view.findViewById(R.id.buttonBirthDate);
             editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
             textViewAcctId = (TextView) view.findViewById(R.id.textViewAcctId);
+            buttonMedia = (Button) view.findViewById(R.id.buttonMedia);
             buttonSave = (Button) view.findViewById(R.id.buttonSave);
             buttonCancel = (Button) view.findViewById(R.id.buttonCancel);
         }
@@ -124,6 +126,13 @@ public class AccountFragment extends Fragment
             @Override
             public void onClick(View v) {
                 showDatePickerDialog(v);
+            }
+        });
+
+        viewHolderRef.buttonMedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manageMedia();
             }
         });
 
@@ -197,9 +206,14 @@ public class AccountFragment extends Fragment
         goBackToMain();
     }
 
+    private void manageMedia() {
+        Intent mediaIntent = new Intent(this.getActivity(), MediaUploadActivity.class);
+        startActivity(mediaIntent);
+    }
+
     private void goBackToMain() {
-        Intent afterAuthenticatedIntent = new Intent(this.getActivity(), MainActivity.class);
-        startActivity(afterAuthenticatedIntent);
+        Intent mainIntent = new Intent(this.getActivity(), MainActivity.class);
+        startActivity(mainIntent);
     }
 
     public void showDatePickerDialog(View v) {

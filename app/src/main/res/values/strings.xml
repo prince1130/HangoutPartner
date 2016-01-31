@@ -31,4 +31,6 @@
         <item>Female</item>
     </string-array>
 
+    <string name="upload_image">Upload an image</string>
+
 </resources>

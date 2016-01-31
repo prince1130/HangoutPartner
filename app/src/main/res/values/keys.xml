@@ -4,6 +4,8 @@
     <string name="firebase_user_url">https://sizzling-heat-8207.firebaseio.com/user/</string>
     <string name="firebase_event_url">https://sizzling-heat-8207.firebaseio.com/event/</string>
 
+    <string name="google_app_id">72c6bbc3ab948bced4b1dfb06cb46bcefac8a892</string>
+
     <!-- Your Facebook App ID from your app settings on https://developers.facebook.com/ -->
     <!-- More details here: https://www.firebase.com/docs/android/guide/login/facebook.html -->
     <string name="facebook_app_id">10819086947</string>
@@ -19,5 +21,8 @@
 
     <string name="content_authority">nyc.pleasure.hangoutpartneralpha</string>
     <string name="sync_account_type">nyc.pleasure</string>
+
+    <string name="congnito_pool_id">us-east-1:7797ed75-2c6d-426a-b2a6-5d48cd74f5fb</string>
+    <string name="s3_bucket_name">helloworld-contentdelivery-mobilehub-1745560474</string>
 
 </resources>
