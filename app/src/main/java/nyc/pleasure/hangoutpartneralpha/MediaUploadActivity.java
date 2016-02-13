@@ -1,42 +1,76 @@
 package nyc.pleasure.hangoutpartneralpha;
 
 import android.app.Activity;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.amazonaws.http.HttpClient;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 import nyc.pleasure.hangoutpartneralpha.s3.UtilityS3;
 
-public class MediaUploadActivity extends AppCompatActivity {
+public class MediaUploadActivity extends ListActivity {
 
     public static final String LOG_TAG = MediaUploadActivity.class.getSimpleName();
 
-    public Button btnUploadImg = null;
+    private AmazonS3Client s3Client;
+    private String s3BucketName;
+    private SimpleAdapter simpleAdapter;
+    private ArrayList<HashMap<String, Object>> transferRecordMaps;
 
-    private String URL = "https://s3.amazonaws.com/helloworld-contentdelivery-mobilehub-1745560474/Folder123/VID_20160111_154037.mp4";
-//    private String URL = "https://s3.amazonaws.com/helloworld-contentdelivery-mobilehub-1745560474/Folder123/IMG_4902.MOV";
-    private Uri videoUri = Uri.parse(URL);
+    private Button btnUploadImg = null;
+    private Button btnUploadVideo = null;
+
+    private String URLS3 = "https://s3.amazonaws.com/";
+    private String URLBucket = "helloworld-contentdelivery-mobilehub-1745560474/";
+    private String URLFolder = "Folder456/";
+    private String URLFileVideo = "VID_20160111_154049.mp4";
+    private String URLFileImage = "IMG_20160111_153927.jpg";
+//    private String URL = "https://s3.amazonaws.com/helloworld-contentdelivery-mobilehub-1745560474/Folder456/VID_20160111_154037.mp4";
+    private Uri UriVideo = Uri.parse(URLS3 + URLBucket + URLFolder + URLFileVideo);
+    private Uri UriImage = Uri.parse(URLS3 + URLBucket + URLFolder + URLFileImage);
+
+    public ImageView imgViewProfile = null;
 
     public VideoView videoViewProfile = null;
     public MediaController mediaControls;
@@ -45,7 +79,6 @@ public class MediaUploadActivity extends AppCompatActivity {
     // The TransferUtility is the primary class for managing transfer to S3
     private TransferUtility transferUtility;
 
-    public static final int PERMISSIONS_REQUEST_READ_EXT_STORAGE = 11;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -55,10 +88,41 @@ public class MediaUploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_upload);
+        initData();
+        initUI();
+    }
+
+
+    private void initData() {
+        s3Client = UtilityS3.getS3Client(MediaUploadActivity.this);
+        s3BucketName = getResources().getString(R.string.s3_bucket_name);
+        transferRecordMaps = new ArrayList<HashMap<String, Object>>();
+
+        simpleAdapter = new SimpleAdapter(this, transferRecordMaps, R.layout.list_item_image,
+                new String[] {"key"}, new int[] {R.id.key});
+
+        simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object data, String textRepresentation) {
+                switch (view.getId()) {
+                    case R.id.key:
+                        Uri imgUri = Uri.parse(URLS3 + URLBucket + URLFolder + (String) data);
+                        ImageView currentImg = (ImageView) view;
+                        currentImg.setImageURI(imgUri);
+                        return true;
+                }
+
+                return false;
+            }
+        });
+        setListAdapter(simpleAdapter);
 
         // Initializes TransferUtility, always do this before using it.
         transferUtility = UtilityS3.getTransferUtility(this);
 
+    }
+
+    private void initUI() {
         btnUploadImg = (Button) findViewById(R.id.btnUploadImg);
 
         btnUploadImg.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +132,26 @@ public class MediaUploadActivity extends AppCompatActivity {
             }
         });
 
+        btnUploadVideo = (Button) findViewById(R.id.btnUploadVideo);
+        btnUploadVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doUploadVideo();
+            }
+        });
+
+        //////////////////////////////////////////////////////////////////
+
+        imgViewProfile = (ImageView) findViewById(R.id.image_view);
+//        imgViewProfile.setImageBitmap(getBitmapFromUrl( URLS3 + URLBucket + URLFolder + URLFileImage ));
+        new DownloadImageTask(imgViewProfile).execute(URLS3 + URLBucket + URLFolder + URLFileImage);
+
+        //////////////////////////////////////////////////////////////////
+
         videoViewProfile = (VideoView) findViewById(R.id.video_view);
         mediaControls = new MediaController(MediaUploadActivity.this);
         videoViewProfile.setMediaController(mediaControls);
-        videoViewProfile.setVideoURI(videoUri);
+        videoViewProfile.setVideoURI(UriVideo);
         videoViewProfile.requestFocus();
 
         videoViewProfile.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -81,7 +161,10 @@ public class MediaUploadActivity extends AppCompatActivity {
                 videoViewProfile.pause();
             }
         });
+
+
     }
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +188,22 @@ public class MediaUploadActivity extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
+    private void doUploadVideo() {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= 19) {
+            // For Android versions of KitKat or later, we use a
+            // different intent to ensure
+            // we can get the file path from the returned intent URI
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+
+        intent.setType("video/*");
+        startActivityForResult(intent, 0);
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    CALLBACK FUNCTIONS
@@ -160,7 +259,6 @@ public class MediaUploadActivity extends AppCompatActivity {
 
 
 
-
     private String getPath(Uri uri) throws URISyntaxException {
         final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;
         String selection = null;
@@ -200,7 +298,6 @@ public class MediaUploadActivity extends AppCompatActivity {
             Cursor cursor = null;
             try {
 
-                grandPermission();
                 cursor = getContentResolver().query(uri, projection, selection, selectionArgs, null);
                         //// URI of the table. Columns to return,  Selection critera column, Selection criteria value, Sort order for result.
                         ////
@@ -217,16 +314,6 @@ public class MediaUploadActivity extends AppCompatActivity {
         return null;
     }
 
-    private void grandPermission() {
-/*
-
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST_READ_EXT_STORAGE);
-        }
-*/
-
-    }
 
 
     private void beginUpload(String userId, String filePath) {
@@ -236,7 +323,9 @@ public class MediaUploadActivity extends AppCompatActivity {
             return;
         }
         File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(getResources().getString(R.string.s3_bucket_name) ,  file.getName() , file);
+        TransferObserver observer = transferUtility.upload(getResources().getString(R.string.s3_bucket_name)
+                , URLFolder + file.getName()
+                , file);
 
 
 /*
@@ -252,5 +341,64 @@ public class MediaUploadActivity extends AppCompatActivity {
 
 
 
+    private class GetFileListTask extends AsyncTask<Void, Void, Void> {
+        // The list of objects we find in the S3 bucket
+        private List<S3ObjectSummary> s3ObjList;
+        // A dialog to let the user know we are retrieving the files
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(MediaUploadActivity.this,
+                    getString(R.string.refreshing),
+                    getString(R.string.please_wait));
+        }
+
+        @Override
+        protected Void doInBackground(Void... inputs) {
+            // Queries files in the bucket from S3.
+            s3ObjList = s3Client.listObjects(s3BucketName).getObjectSummaries();
+            transferRecordMaps.clear();
+            for (S3ObjectSummary summary : s3ObjList) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("key", summary.getKey());
+                transferRecordMaps.add(map);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            dialog.dismiss();
+            simpleAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
 }

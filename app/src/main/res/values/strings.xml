@@ -32,5 +32,9 @@
     </string-array>
 
     <string name="upload_image">Upload an image</string>
+    <string name="upload_video">Upload a video</string>
+    <string name="refreshing">Refreshing</string>
+    <string name="please_wait">Please wait</string>
+
 
 </resources>

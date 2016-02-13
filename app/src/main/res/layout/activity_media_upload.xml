@@ -32,6 +32,29 @@
                 android:layout_weight="1"
                 android:text="@string/upload_image" />
 
+            <Button
+                android:id="@+id/btnUploadVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/upload_video" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -43,8 +66,8 @@
 
             <VideoView
             android:id="@+id/video_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"/>
 
         </LinearLayout>
