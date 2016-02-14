@@ -68,8 +68,9 @@
 
         <activity
             android:name="nyc.pleasure.partner.profile.ProfileBrowseActivity"
+            android:parentActivityName="nyc.pleasure.partner.event.EventDetailActivity"
             android:label="@string/title_activity_profile_browse"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme"></activity>
 
         <provider
             android:name="nyc.pleasure.partner.data.EventProvider"

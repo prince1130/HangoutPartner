@@ -93,7 +93,7 @@ public class EventDetailFragment extends Fragment {
 
         Intent intent =  getActivity().getIntent();
         Uri data = intent.getData();
-        String mEventId = intent.getStringExtra("selectedEventId");
+        String mEventId = Utility.getSelectedEventId(this.getContext());
         mFirebaseEventRef = FirebaseUtility.getInstance(getResources()).getEventReference().child(mEventId);
     }
 
@@ -167,8 +167,8 @@ public class EventDetailFragment extends Fragment {
 
     private void goCreatorProfile(FunEvent event) {
         if(event != null) {
+            Utility.setSelectedUserId(this.getContext(), event.getCreaterUserId());
             Intent profileIntent = new Intent(this.getActivity(), ProfileBrowseActivity.class);
-            profileIntent.putExtra("selectedProfileId", event.getCreaterUserId());
             startActivity(profileIntent);
         }
     }

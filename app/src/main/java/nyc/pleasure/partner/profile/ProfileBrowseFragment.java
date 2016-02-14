@@ -22,6 +22,7 @@ import com.firebase.client.ValueEventListener;
 
 import nyc.pleasure.partner.MediaUploadActivity;
 import nyc.pleasure.partner.R;
+import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.chat.ChatActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
@@ -46,7 +47,7 @@ public class ProfileBrowseFragment extends Fragment {
 
     public static class ViewHolder {
         public final EditText editTextDisplayName;
-        public final Spinner spinnerGender;
+        public final EditText editTextGender;
         public final EditText editTextDescriptionMe;
         public final TextView textViewAcctId;
 
@@ -57,7 +58,7 @@ public class ProfileBrowseFragment extends Fragment {
         public ViewHolder(View view) {
 
             editTextDisplayName = (EditText) view.findViewById(R.id.editTextDisplayName);
-            spinnerGender = (Spinner) view.findViewById(R.id.spinnerGender);
+            editTextGender = (EditText) view.findViewById(R.id.editTextGender);
             editTextDescriptionMe = (EditText) view.findViewById(R.id.editTextDescriptionMe);
             textViewAcctId = (TextView) view.findViewById(R.id.textViewAcctId);
 
@@ -67,7 +68,6 @@ public class ProfileBrowseFragment extends Fragment {
         }
     }
 
-    private ArrayAdapter<CharSequence> genderAdapter = null;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    PERSISTENCE
@@ -94,7 +94,7 @@ public class ProfileBrowseFragment extends Fragment {
         Intent intent =  getActivity().getIntent();
         Uri data = intent.getData();
          //// Before comes here. the source Activity have to let us know the id with    Intent intent = new Intent(this, ProfileBrowseActivity.class).putExtra("selectedProfileId", userId);
-        selectedUserId = intent.getStringExtra("selectedProfileId");
+        selectedUserId = Utility.getSelectedUserId(this.getContext());
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(selectedUserId);
 
     }
@@ -106,14 +106,6 @@ public class ProfileBrowseFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_profile_browse, container, false);
         viewHolderRef = new ViewHolder(rootView);
-
-        genderAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.gender_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        viewHolderRef.spinnerGender.setAdapter(genderAdapter);
-
 
         viewHolderRef.buttonMedia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,16 +191,16 @@ public class ProfileBrowseFragment extends Fragment {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void browseMedia() {
+        Utility.setSelectedUserId(this.getContext(), selectedUserId);
         Intent mediaIntent = new Intent(this.getActivity(), MediaUploadActivity.class);
-        mediaIntent.putExtra("selectedProfileId", selectedUserId);
         if (mediaIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(mediaIntent);
         }
     }
 
     private void sendMessage() {
+        Utility.setLoggedInUserId(this.getContext(), selectedUserId);
         Intent messageIntent = new Intent(this.getActivity(), ChatActivity.class);
-        messageIntent.putExtra("selectedProfileId", selectedUserId);
         if (messageIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(messageIntent);
         }
@@ -232,10 +224,7 @@ public class ProfileBrowseFragment extends Fragment {
 
     private void updateView(ViewHolder viewHolder, User user) {
         viewHolder.editTextDisplayName.setText(user.getDisplayName());
-
-        int genPosition = genderAdapter.getPosition(user.getGender());
-        viewHolder.spinnerGender.setSelection(genPosition);
-
+        viewHolder.editTextGender.setText(user.getGender());
         viewHolder.editTextDescriptionMe.setText(user.getDescriptionMe());
         viewHolder.textViewAcctId.setText(user.getUserId());
     }

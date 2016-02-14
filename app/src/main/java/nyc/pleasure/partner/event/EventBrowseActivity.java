@@ -104,7 +104,8 @@ public class EventBrowseActivity extends AppCompatActivity
     }
 
     public void onItemSelected(String eventId) {
-        Intent intent = new Intent(this, EventDetailActivity.class).putExtra("selectedEventId", eventId);
+        Utility.setSelectedEventId(this, eventId);
+        Intent intent = new Intent(this, EventDetailActivity.class);
         startActivity(intent);
     }
 

@@ -32,6 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:enabled="false"
                 android:id="@+id/editTextDisplayName" />
 
             <TextView
@@ -40,10 +41,11 @@
                 android:text="Gender"
                 android:ems="6"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-            <Spinner
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerGender"/>
+                android:enabled="false"
+                android:id="@+id/editTextGender"/>
 
         </LinearLayout>
 
@@ -65,8 +67,9 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:ems="10"
+                android:inputType="textMultiLine"
+                android:enabled="false"
                 android:id="@+id/editTextDescriptionMe" />
 
         </LinearLayout>
@@ -90,6 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:enabled="false"
                 android:id="@+id/textViewAcctId"/>
 
         </LinearLayout>

@@ -35,6 +35,34 @@ public class Utility {
         editor.commit();
     }
 
+
+    //// selectedProfileId
+    public static String getSelectedUserId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String defaultValue = null;
+        return sharedPref.getString(context.getString(R.string.preference_selected_user), defaultValue);
+    }
+    public static void setSelectedUserId(Context context, String userId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(R.string.preference_selected_user), userId);
+        editor.commit();
+    }
+
+    //// selectedEventId
+    public static String getSelectedEventId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String defaultValue = null;
+        return sharedPref.getString(context.getString(R.string.preference_selected_event), defaultValue);
+    }
+    public static void setSelectedEventId(Context context, String eventId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(R.string.preference_selected_event), eventId);
+        editor.commit();
+    }
+
+
     public static void clearPreference(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

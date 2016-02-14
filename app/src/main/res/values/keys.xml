@@ -18,6 +18,8 @@
     <string name="preference_file_key">nyc.pleasure.partner</string>
     <string name="preference_user_id">UserId</string>
     <string name="preference_display_name">UserDisplayName</string>
+    <string name="preference_selected_user">SelectedUserId</string>
+    <string name="preference_selected_event">SelectedEventId</string>
 
     <string name="content_authority">nyc.pleasure.partner</string>
     <string name="sync_account_type">nyc.pleasure</string>
