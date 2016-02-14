@@ -35,6 +35,7 @@
     <string name="upload_video">Upload a video</string>
     <string name="refreshing">Refreshing</string>
     <string name="please_wait">Please wait</string>
+    <string name="title_activity_profile_browse">ProfileBrowseActivity</string>
 
 
 </resources>

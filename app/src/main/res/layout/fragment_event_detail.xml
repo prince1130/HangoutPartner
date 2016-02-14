@@ -23,12 +23,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Title  "
+                    android:ems="6"
+                    android:text="Title"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,30 +45,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date  "
+                    android:ems="6"
+                    android:text="Date"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
                     android:ems="10"
+                    android:inputType="date"
                     android:id="@+id/editTextEventDate" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time  "
+                    android:ems="6"
+                    android:text="Time"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
                     android:ems="10"
+                    android:inputType="date"
                     android:id="@+id/editTextEventTime" />
 
             </LinearLayout>
@@ -78,12 +81,13 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location  "
+                    android:ems="6"
+                    android:text="Location"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,23 +102,31 @@
             </LinearLayout>
 
 
-            <!--  Partner  -->
+            <!--  Creator  -->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Partner  "
+                    android:ems="6"
+                    android:text="Creator"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:id="@+id/textViewEventPartner"/>
+                    android:ems="8"
+                    android:id="@+id/textViewEventCreator"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="8"
+                    android:text="Profile"
+                    android:id="@+id/buttonCreatorProfile"/>
 
             </LinearLayout>
 
@@ -123,12 +135,13 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detail  "
+                    android:ems="6"
+                    android:text="Detail"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -146,21 +159,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="100dp">
+                android:layout_marginTop="80dp">
 
                 <Button
-                    android:id="@+id/buttonEventBack"
-                    android:text="Back"
+                    android:id="@+id/buttonEventDone"
+                    android:text="Done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"/>
-
-                <Button
-                    android:id="@+id/buttonEventContact"
-                    android:text="Contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
 
             </LinearLayout>
 
@@ -171,7 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="80dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -191,15 +197,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:visibility="invisible"
-                android:id="@+id/ownerSection">
+                android:layout_marginTop="20dp">
                 <TextView
                     android:id="@+id/textViewCreatorAction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Creator Actions "
                     android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:visibility="invisible"
+                android:id="@+id/ownerSection">
                 <Button
                     android:id="@+id/buttonEventDelete"
                     android:text="Delete"
@@ -207,7 +220,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
             </LinearLayout>
-
 
         </LinearLayout>
 

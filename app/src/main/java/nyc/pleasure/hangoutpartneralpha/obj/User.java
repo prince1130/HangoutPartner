@@ -19,7 +19,7 @@ public class User {
     private String email = null;
     private Integer zipCode = null;
 
-    private String selfIntroduction = null;
+    private String descriptionMe = null;
     private String descriptionIdealPartner = null;
     private String descriptionReasonJoinMe = null;
 
@@ -100,6 +100,19 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getDescriptionMe() {
+        return descriptionMe;
+    }
 
+    public void setDescriptionMe(String descriptionMe) {
+        this.descriptionMe = descriptionMe;
+    }
 
+    public String getDescriptionIdealPartner() {
+        return descriptionIdealPartner;
+    }
+
+    public void setDescriptionIdealPartner(String descriptionIdealPartner) {
+        this.descriptionIdealPartner = descriptionIdealPartner;
+    }
 }

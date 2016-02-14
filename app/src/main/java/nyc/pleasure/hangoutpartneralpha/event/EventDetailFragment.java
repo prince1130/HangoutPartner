@@ -30,6 +30,7 @@ import nyc.pleasure.hangoutpartneralpha.chat.ChatActivity;
 import nyc.pleasure.hangoutpartneralpha.firebase.FirebaseUtility;
 import nyc.pleasure.hangoutpartneralpha.obj.FunEvent;
 import nyc.pleasure.hangoutpartneralpha.obj.User;
+import nyc.pleasure.hangoutpartneralpha.profile.ProfileBrowseActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,11 +51,11 @@ public class EventDetailFragment extends Fragment {
         public final TextView textViewEventTime;
         public final TextView textViewLocationName;
         public final TextView textViewLocationAddress;
-        public final TextView textViewEventPartner;
+        public final TextView textViewEventCreator;
         public final TextView textViewEventDetail;
         public final TextView textViewEventId;
-        public final Button buttonEventBack;
-        public final Button buttonEventContact;
+        public final Button buttonEventDone;
+        public final Button buttonCreatorProfile;
         public final LinearLayout ownerSection;
         public final Button buttonEventDelete;
 
@@ -64,11 +65,11 @@ public class EventDetailFragment extends Fragment {
             textViewEventTime = (TextView) view.findViewById(R.id.editTextEventTime);
             textViewLocationName = (TextView) view.findViewById(R.id.textViewLocationName);
             textViewLocationAddress = (TextView) view.findViewById(R.id.textViewLocationAddress);
-            textViewEventPartner = (TextView) view.findViewById(R.id.textViewEventPartner);
+            textViewEventCreator = (TextView) view.findViewById(R.id.textViewEventCreator);
             textViewEventDetail = (TextView) view.findViewById(R.id.editTextEventDetail);
             textViewEventId = (TextView) view.findViewById(R.id.textViewEventId);
-            buttonEventBack = (Button) view.findViewById(R.id.buttonEventBack);
-            buttonEventContact = (Button) view.findViewById(R.id.buttonEventContact);
+            buttonEventDone = (Button) view.findViewById(R.id.buttonEventDone);
+            buttonCreatorProfile = (Button) view.findViewById(R.id.buttonCreatorProfile);
             ownerSection = (LinearLayout) view.findViewById(R.id.ownerSection);
             buttonEventDelete = (Button) view.findViewById(R.id.buttonEventDelete);
         }
@@ -80,7 +81,7 @@ public class EventDetailFragment extends Fragment {
     /* A reference to the Firebase */
     private Firebase mFirebaseEventRef;
     private ValueEventListener mFirebaseEventValueListener = null;
-    private String mEventId;
+    private FunEvent currentEvent;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -96,7 +97,7 @@ public class EventDetailFragment extends Fragment {
 
         Intent intent =  getActivity().getIntent();
         Uri data = intent.getData();
-        mEventId = intent.getStringExtra("selectedEventId");
+        String mEventId = intent.getStringExtra("selectedEventId");
         mFirebaseEventRef = FirebaseUtility.getInstance(getResources()).getEventReference().child(mEventId);
     }
 
@@ -108,17 +109,17 @@ public class EventDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_event_detail, container, false);
         viewHolderRef = new ViewHolder(rootView);
 
-        viewHolderRef.buttonEventBack.setOnClickListener(new View.OnClickListener() {
+        viewHolderRef.buttonEventDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goBackToEventBrowse();
             }
         });
 
-        viewHolderRef.buttonEventContact.setOnClickListener(new View.OnClickListener() {
+        viewHolderRef.buttonCreatorProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactEventHost();
+                goCreatorProfile(currentEvent);
             }
         });
 
@@ -133,7 +134,7 @@ public class EventDetailFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(LOG_TAG, "onDataChange. Rebuild UI with latest data. " + dataSnapshot.toString());
-                FunEvent currentEvent = dataSnapshot.getValue(FunEvent.class);
+                currentEvent = dataSnapshot.getValue(FunEvent.class);
                 if (currentEvent != null) { //// This user was found.
                     updateView(viewHolderRef, currentEvent);
                 } else { //// No such event stored. Shouldn't be here.
@@ -168,9 +169,12 @@ public class EventDetailFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void contactEventHost() {
-        Intent intent = new Intent(this.getActivity(), ChatActivity.class);
-        startActivity(intent);
+    private void goCreatorProfile(FunEvent event) {
+        if(event != null) {
+            Intent profileIntent = new Intent(this.getActivity(), ProfileBrowseActivity.class);
+            profileIntent.putExtra("selectedProfileId", event.getCreaterUserId());
+            startActivity(profileIntent);
+        }
     }
 
     private void doDeleteEvent() {
@@ -207,7 +211,7 @@ public class EventDetailFragment extends Fragment {
         viewHolder.textViewEventTime.setText(getTimeString(event.getStartTime()));
         viewHolder.textViewLocationName.setText(event.getLocationName());
         viewHolder.textViewLocationAddress.setText(event.getLocationAddress());
-        viewHolder.textViewEventPartner.setText(event.getCreaterUserDisplayName());
+        viewHolder.textViewEventCreator.setText(event.getCreaterUserDisplayName());
         viewHolder.textViewEventDetail.setText(event.getDetail());
 
         viewHolder.textViewEventId.setText(event.getEventId());

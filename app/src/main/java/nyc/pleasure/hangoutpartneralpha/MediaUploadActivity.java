@@ -49,7 +49,7 @@ import java.util.List;
 
 import nyc.pleasure.hangoutpartneralpha.s3.UtilityS3;
 
-public class MediaUploadActivity extends ListActivity {
+public class MediaUploadActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = MediaUploadActivity.class.getSimpleName();
 
@@ -115,7 +115,7 @@ public class MediaUploadActivity extends ListActivity {
                 return false;
             }
         });
-        setListAdapter(simpleAdapter);
+//        setListAdapter(simpleAdapter);
 
         // Initializes TransferUtility, always do this before using it.
         transferUtility = UtilityS3.getTransferUtility(this);

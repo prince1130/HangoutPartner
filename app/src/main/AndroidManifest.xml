@@ -60,12 +60,16 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".event.EventDetailActivity"
-            android:parentActivityName=".event.EventBrowseActivity"></activity>
+            android:parentActivityName=".event.EventBrowseActivity" />
         <activity
             android:name=".AccountActivity"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".MediaUploadActivity" />
 
-        <activity android:name=".MediaUploadActivity"></activity>
+        <activity
+            android:name=".profile.ProfileBrowseActivity"
+            android:label="@string/title_activity_profile_browse"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
             android:name=".data.EventProvider"

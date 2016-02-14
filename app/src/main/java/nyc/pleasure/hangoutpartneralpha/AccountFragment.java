@@ -42,24 +42,30 @@ public class AccountFragment extends Fragment
     private ViewHolder viewHolderRef;
 
     public static class ViewHolder {
+        public final EditText editTextEmail;
+        public final EditText editTextDisplayName;
         public final EditText editTextFirstName;
         public final EditText editTextLastName;
-        public final EditText editTextDisplayName;
+
         public final Spinner spinnerGender;
         public final Button buttonBirthDate;
-        public final EditText editTextEmail;
+        public final EditText editTextDescriptionMe;
+
         public final TextView textViewAcctId;
         public final Button buttonMedia;
         public final Button buttonSave;
         public final Button buttonCancel;
 
         public ViewHolder(View view) {
+            editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
+            editTextDisplayName = (EditText) view.findViewById(R.id.editTextDisplayName);
             editTextFirstName = (EditText) view.findViewById(R.id.editTextFirstName);
             editTextLastName = (EditText) view.findViewById(R.id.editTextLastName);
-            editTextDisplayName = (EditText) view.findViewById(R.id.editTextDisplayName);
+
             spinnerGender = (Spinner) view.findViewById(R.id.spinnerGender);
             buttonBirthDate = (Button) view.findViewById(R.id.buttonBirthDate);
-            editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
+            editTextDescriptionMe = (EditText) view.findViewById(R.id.editTextDescriptionMe);
+
             textViewAcctId = (TextView) view.findViewById(R.id.textViewAcctId);
             buttonMedia = (Button) view.findViewById(R.id.buttonMedia);
             buttonSave = (Button) view.findViewById(R.id.buttonSave);
@@ -192,15 +198,16 @@ public class AccountFragment extends Fragment
 
         User user = new User();
         user.setUserId(userId);
+        user.setEmail(viewHolder.editTextEmail.getText().toString());
+        user.setDisplayName(viewHolder.editTextDisplayName.getText().toString());
         user.setFirstName(viewHolder.editTextFirstName.getText().toString());
         user.setLastName(viewHolder.editTextLastName.getText().toString());
-        user.setDisplayName(viewHolder.editTextDisplayName.getText().toString());
-        user.setEmail(viewHolder.editTextEmail.getText().toString());
 
         String gen = (String)viewHolder.spinnerGender.getSelectedItem();
         user.setGender(gen);
-
         user.setBirthDate(convertTime(selectedYear, selectedMonth - 1, selectedDay, 0, 0));
+
+        user.setDescriptionMe(viewHolder.editTextDescriptionMe.getText().toString());
 
         mFirebaseUserRef.setValue(user);
         goBackToMain();
@@ -248,10 +255,10 @@ public class AccountFragment extends Fragment
 /////////////////////////////////////////////////////////////////////////////////////
 
     private void updateView(ViewHolder viewHolder, User user) {
+        viewHolder.editTextEmail.setText(user.getEmail());
+        viewHolder.editTextDisplayName.setText(user.getDisplayName());
         viewHolder.editTextFirstName.setText(user.getFirstName());
         viewHolder.editTextLastName.setText(user.getLastName());
-        viewHolder.editTextDisplayName.setText(user.getDisplayName());
-        viewHolder.editTextEmail.setText(user.getEmail());
 
         int genPosition = genderAdapter.getPosition(user.getGender());
         viewHolder.spinnerGender.setSelection(genPosition);
@@ -262,6 +269,8 @@ public class AccountFragment extends Fragment
         }
         c.setTimeInMillis(user.getBirthDate());
         viewHolderRef.buttonBirthDate.setText(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1)+ "-" + c.get(Calendar.DAY_OF_MONTH));
+
+        viewHolder.editTextDescriptionMe.setText(user.getDescriptionMe());
 
         viewHolder.textViewAcctId.setText(user.getUserId());
     }
