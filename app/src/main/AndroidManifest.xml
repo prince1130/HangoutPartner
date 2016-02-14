@@ -28,16 +28,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name="nyc.pleasure.partner.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="nyc.pleasure.partner.chat.ChatActivity"
             android:label="@string/title_activity_chat"
@@ -47,30 +48,33 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nyc.pleasure.partner.MainActivity" />
         </activity>
+
         <activity
             android:name="nyc.pleasure.partner.auth.AuthActivity"
             android:label="HangoutPartner Authentication" />
         <activity android:name="com.facebook.FacebookActivity" />
         <activity android:name="nyc.pleasure.partner.auth.TwitterOAuthActivity" />
+
         <activity
             android:name="nyc.pleasure.partner.event.EventBrowseActivity"
             android:parentActivityName="nyc.pleasure.partner.MainActivity" />
         <activity
             android:name="nyc.pleasure.partner.event.EventCreateActivity"
-            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
+            android:parentActivityName="nyc.pleasure.partner.event.EventBrowseActivity" />
         <activity
             android:name="nyc.pleasure.partner.event.EventDetailActivity"
             android:parentActivityName="nyc.pleasure.partner.event.EventBrowseActivity" />
-        <activity
-            android:name=".profile.ProfileUpdateActivity"
-            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
-        <activity android:name="nyc.pleasure.partner.MediaUploadActivity" />
 
+        <activity
+            android:name="nyc.pleasure.partner.profile.ProfileUpdateActivity"
+            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
         <activity
             android:name="nyc.pleasure.partner.profile.ProfileBrowseActivity"
             android:parentActivityName="nyc.pleasure.partner.event.EventDetailActivity"
             android:label="@string/title_activity_profile_browse"
             android:theme="@style/AppTheme"></activity>
+        <activity android:name="nyc.pleasure.partner.MediaUploadActivity"
+            android:parentActivityName="nyc.pleasure.partner.profile.ProfileUpdateActivity" />
 
         <provider
             android:name="nyc.pleasure.partner.data.EventProvider"

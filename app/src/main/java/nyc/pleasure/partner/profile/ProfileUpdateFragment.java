@@ -26,8 +26,8 @@ import java.util.Calendar;
 
 import nyc.pleasure.partner.MainActivity;
 import nyc.pleasure.partner.MediaUploadActivity;
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.obj.User;
 
@@ -108,7 +108,7 @@ public class ProfileUpdateFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Setup our Firebase mFirebaseRef
-        String mUserId = Utility.getLoggedInUserId(this.getContext());
+        String mUserId = PreferenceUtility.getLoggedInUserId(this.getContext());
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(mUserId);
     }
 
@@ -197,8 +197,8 @@ public class ProfileUpdateFragment extends Fragment
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void doAccountSave(ViewHolder viewHolder) {
-        String userId = Utility.getLoggedInUserId(this.getContext());
-        Utility.setLoggedInUserDisplayName(this.getContext(), viewHolder.editTextDisplayName.getText().toString());
+        String userId = PreferenceUtility.getLoggedInUserId(this.getContext());
+        PreferenceUtility.setLoggedInUserDisplayName(this.getContext(), viewHolder.editTextDisplayName.getText().toString());
 
         User user = new User();
         user.setUserId(userId);

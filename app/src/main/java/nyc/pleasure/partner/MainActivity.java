@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        String userId = Utility.getLoggedInUserId(this);
+        String userId = PreferenceUtility.getLoggedInUserId(this);
 
         if(userId != null && userId.length() > 0) {
             // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void doLogout() {
         /// Need to destroy preference saved earlier.
-        Utility.clearPreference(this);
+        PreferenceUtility.clearPreference(this);
         Intent intent = new Intent(this, AuthActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);

@@ -95,8 +95,8 @@ public class MainActivityFragment extends Fragment {
          *   LOGIN STATUS.
          */
 
-        String userDisplayId = Utility.getLoggedInUserId(this.getContext());
-        String userDisplayName = Utility.getLoggedInUserDisplayName(this.getContext());
+        String userDisplayId = PreferenceUtility.getLoggedInUserId(this.getContext());
+        String userDisplayName = PreferenceUtility.getLoggedInUserDisplayName(this.getContext());
 
         if(userDisplayId == null || userDisplayId.length() < 1) {
             // NOT LOGIN YET.

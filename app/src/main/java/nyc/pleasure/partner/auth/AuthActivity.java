@@ -37,8 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nyc.pleasure.partner.MainActivity;
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.obj.User;
 
 /**
@@ -422,7 +422,7 @@ public class AuthActivity extends AppCompatActivity implements
         /* invalidate options menu to hide/show the logout button */
 //        supportInvalidateOptionsMenu();
 
-        Utility.setLoggedInUserId(this, name);
+        PreferenceUtility.setLoggedInUserId(this, name);
         prepareUserDisplayName(name);
 
     }
@@ -448,7 +448,7 @@ public class AuthActivity extends AppCompatActivity implements
         }
     }
     private void setUserDisplayName(String displayName) {
-        Utility.setLoggedInUserDisplayName(this, displayName);
+        PreferenceUtility.setLoggedInUserDisplayName(this, displayName);
     }
 
 
@@ -638,7 +638,8 @@ public class AuthActivity extends AppCompatActivity implements
      */
     public void loginWithPassword() {
         mAuthProgressDialog.show();
-        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+//        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword("test2@firebaseuser.com", "test1234", new AuthResultHandler("password"));
     }
 
     /* ************************************

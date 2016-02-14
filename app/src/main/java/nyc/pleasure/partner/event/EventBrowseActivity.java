@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.auth.AuthActivity;
 import nyc.pleasure.partner.chat.ChatActivity;
 
@@ -32,7 +32,7 @@ public class EventBrowseActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        String userId = Utility.getLoggedInUserId(this);
+        String userId = PreferenceUtility.getLoggedInUserId(this);
 
         if(userId != null && userId.length() > 0) {
             // Inflate the menu; this adds items to the action bar if it is present.
@@ -86,7 +86,7 @@ public class EventBrowseActivity extends AppCompatActivity
 
     private void doLogout() {
         /// Need to destroy preference saved earlier.
-        Utility.clearPreference(this);
+        PreferenceUtility.clearPreference(this);
         Intent intent = new Intent(this, AuthActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
@@ -104,7 +104,7 @@ public class EventBrowseActivity extends AppCompatActivity
     }
 
     public void onItemSelected(String eventId) {
-        Utility.setSelectedEventId(this, eventId);
+        PreferenceUtility.setSelectedEventId(this, eventId);
         Intent intent = new Intent(this, EventDetailActivity.class);
         startActivity(intent);
     }

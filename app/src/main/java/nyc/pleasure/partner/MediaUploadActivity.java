@@ -207,7 +207,7 @@ public class MediaUploadActivity extends AppCompatActivity {
 
             try {
                 String path = getPath(uri);
-                String userId = Utility.getLoggedInUserId(this);
+                String userId = PreferenceUtility.getLoggedInUserId(this);
                 beginUpload(userId, path);
             } catch (URISyntaxException e) {
                 Toast.makeText(this,

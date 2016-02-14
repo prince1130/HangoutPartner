@@ -13,8 +13,8 @@ import android.widget.ListView;
 
 
 import nyc.pleasure.partner.MainActivity;
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.adapter.EventListAdapter;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.obj.FunEvent;
@@ -64,7 +64,7 @@ public class EventBrowseFragment extends Fragment {
         Button createButton = (Button) rootView.findViewById(R.id.buttonEventCreate);
 
 
-        String userId = Utility.getLoggedInUserId(this.getContext());
+        String userId = PreferenceUtility.getLoggedInUserId(this.getContext());
         mEventListAdapter = new EventListAdapter(mFirebaseUtility.getEventReference().limit(50), this.getActivity(), R.layout.list_item_event, userId);
         mListView.setAdapter(mEventListAdapter);
 

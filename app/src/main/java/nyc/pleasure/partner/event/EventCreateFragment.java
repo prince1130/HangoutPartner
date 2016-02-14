@@ -25,8 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.obj.FunEvent;
 
@@ -201,8 +201,8 @@ public class EventCreateFragment extends Fragment
     private void doEventCreate(ViewHolder viewHolder) {
         FunEvent event = new FunEvent();
         event.setCreatedTime(System.currentTimeMillis());
-        event.setCreaterUserId(Utility.getLoggedInUserId(this.getContext()));
-        event.setCreaterUserDisplayName(Utility.getLoggedInUserDisplayName(this.getContext()));
+        event.setCreaterUserId(PreferenceUtility.getLoggedInUserId(this.getContext()));
+        event.setCreaterUserDisplayName(PreferenceUtility.getLoggedInUserDisplayName(this.getContext()));
         event.setTitle(viewHolder.editTextTitle.getText().toString());
         event.setDetail(viewHolder.editTextEventDetail.getText().toString());
 

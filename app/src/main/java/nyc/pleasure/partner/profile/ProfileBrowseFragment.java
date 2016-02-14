@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -21,8 +19,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import nyc.pleasure.partner.MediaUploadActivity;
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.chat.ChatActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
@@ -94,7 +92,7 @@ public class ProfileBrowseFragment extends Fragment {
         Intent intent =  getActivity().getIntent();
         Uri data = intent.getData();
          //// Before comes here. the source Activity have to let us know the id with    Intent intent = new Intent(this, ProfileBrowseActivity.class).putExtra("selectedProfileId", userId);
-        selectedUserId = Utility.getSelectedUserId(this.getContext());
+        selectedUserId = PreferenceUtility.getSelectedUserId(this.getContext());
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(selectedUserId);
 
     }
@@ -191,7 +189,7 @@ public class ProfileBrowseFragment extends Fragment {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void browseMedia() {
-        Utility.setSelectedUserId(this.getContext(), selectedUserId);
+        PreferenceUtility.setSelectedUserId(this.getContext(), selectedUserId);
         Intent mediaIntent = new Intent(this.getActivity(), MediaUploadActivity.class);
         if (mediaIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(mediaIntent);
@@ -199,7 +197,7 @@ public class ProfileBrowseFragment extends Fragment {
     }
 
     private void sendMessage() {
-        Utility.setLoggedInUserId(this.getContext(), selectedUserId);
+        PreferenceUtility.setLoggedInUserId(this.getContext(), selectedUserId);
         Intent messageIntent = new Intent(this.getActivity(), ChatActivity.class);
         if (messageIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(messageIntent);

@@ -22,8 +22,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Calendar;
 
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.obj.FunEvent;
 import nyc.pleasure.partner.profile.ProfileBrowseActivity;
@@ -93,7 +93,7 @@ public class EventDetailFragment extends Fragment {
 
         Intent intent =  getActivity().getIntent();
         Uri data = intent.getData();
-        String mEventId = Utility.getSelectedEventId(this.getContext());
+        String mEventId = PreferenceUtility.getSelectedEventId(this.getContext());
         mFirebaseEventRef = FirebaseUtility.getInstance(getResources()).getEventReference().child(mEventId);
     }
 
@@ -167,7 +167,7 @@ public class EventDetailFragment extends Fragment {
 
     private void goCreatorProfile(FunEvent event) {
         if(event != null) {
-            Utility.setSelectedUserId(this.getContext(), event.getCreaterUserId());
+            PreferenceUtility.setSelectedUserId(this.getContext(), event.getCreaterUserId());
             Intent profileIntent = new Intent(this.getActivity(), ProfileBrowseActivity.class);
             startActivity(profileIntent);
         }
@@ -212,7 +212,7 @@ public class EventDetailFragment extends Fragment {
 
         viewHolder.textViewEventId.setText(event.getEventId());
 
-        String id1 = Utility.getLoggedInUserId(this.getActivity());
+        String id1 = PreferenceUtility.getLoggedInUserId(this.getActivity());
         String id2 = event.getCreaterUserId();
         if(id1.equals(id2)) {
             viewHolder.ownerSection.setVisibility(View.VISIBLE);

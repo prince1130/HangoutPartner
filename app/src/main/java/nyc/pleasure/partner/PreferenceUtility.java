@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by Chien on 12/28/2015.
  */
-public class Utility {
+public class PreferenceUtility {
 
     public static String getLoggedInUserId(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
