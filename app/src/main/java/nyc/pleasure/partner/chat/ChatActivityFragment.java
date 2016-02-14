@@ -33,7 +33,7 @@ public class ChatActivityFragment extends Fragment {
 
     private static String FIREBASE_URL = null;
     private Firebase mFirebaseRootRef = null;
-    private Firebase mFirebaseChatRef = null;
+    private Firebase mFirebaseMsgRef = null;
 
     private String mUsername;
 
@@ -55,7 +55,7 @@ public class ChatActivityFragment extends Fragment {
         setupUsername();
         // Setup our Firebase mFirebaseRef
         mFirebaseRootRef = new Firebase(FIREBASE_URL).getRoot();
-        mFirebaseChatRef = new Firebase(FIREBASE_URL).child("chat");
+        mFirebaseMsgRef = new Firebase(FIREBASE_URL).child("message");
     }
 
 
@@ -90,7 +90,7 @@ public class ChatActivityFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_view_chat);
 
         // Tell our list adapter that we only want 50 messages at a time
-        mChatListAdapter = new ChatListAdapter(mFirebaseChatRef.limit(50), parentActivity, R.layout.list_item_chat, mUsername);
+        mChatListAdapter = new ChatListAdapter(mFirebaseMsgRef.limit(50), parentActivity, R.layout.list_item_chat, mUsername);
 
         mListView.setAdapter(mChatListAdapter);
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -152,7 +152,7 @@ public class ChatActivityFragment extends Fragment {
             chat.setContent(input);
             chat.setUserIdFrom(mUsername);
             // Create a new, auto-generated child of that chat location, and save our chat data there
-            mFirebaseChatRef.push().setValue(chat);
+            mFirebaseMsgRef.push().setValue(chat);
             inputText.setText("");
         }
     }

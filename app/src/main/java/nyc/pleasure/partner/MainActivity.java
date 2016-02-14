@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_account) {
-            viewAccount();
+            OptionsMenuUtility.viewMyProfile(this);
             return true;
         } else if(id == R.id.action_message) {
-            viewMessage();
+            OptionsMenuUtility.viewMyMessage(this);
             return true;
         } else if(id == R.id.action_logout) {
-            doLogout();
+            OptionsMenuUtility.doLogout(this);
             return true;
         }
 
@@ -81,28 +81,7 @@ public class MainActivity extends AppCompatActivity {
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void viewAccount() {
-        Intent intent = new Intent(this, ProfileUpdateActivity.class);
-        if(intent.resolveActivity(this.getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 
-    private void viewMessage() {
-        Intent intent = new Intent(this, ChatActivity.class);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
-
-    private void doLogout() {
-        /// Need to destroy preference saved earlier.
-        PreferenceUtility.clearPreference(this);
-        Intent intent = new Intent(this, AuthActivity.class);
-        if(intent.resolveActivity(this.getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 
 
     /*

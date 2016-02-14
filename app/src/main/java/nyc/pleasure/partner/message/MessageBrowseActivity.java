@@ -1,7 +1,6 @@
-package nyc.pleasure.partner.event;
+package nyc.pleasure.partner.message;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,27 +8,25 @@ import android.view.MenuItem;
 
 import nyc.pleasure.partner.OptionsMenuUtility;
 import nyc.pleasure.partner.PreferenceUtility;
-import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.auth.AuthActivity;
 import nyc.pleasure.partner.chat.ChatActivity;
+import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 
-public class EventBrowseActivity extends AppCompatActivity
-        implements EventBrowseFragment.OnFragmentInteractionListener, EventBrowseFragment.Callback {
+public class MessageBrowseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_browse);
-
+        setContentView(R.layout.activity_message_browse);
         if(savedInstanceState == null) {
             // Create the detail fragment and add it to the activity using a fragment transaction.
-            EventBrowseFragment fragment = new EventBrowseFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.event_browse_container, fragment).commit();
-
+            MessageBrowseFragment fragment = new MessageBrowseFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.message_browse_container, fragment).commit();
         }
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,28 +63,10 @@ public class EventBrowseActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-////    CALLBACK FUNCTIONS
-/////////////////////////////////////////////////////////////////////////////////////
-
-    public void onFragmentInteraction(Uri uri) {
-        Intent intent = new Intent(this, EventDetailActivity.class).setData(uri);
-        startActivity(intent);
-    }
-
-    public void onItemSelected(String eventId) {
-        PreferenceUtility.setSelectedEventId(this, eventId);
-        Intent intent = new Intent(this, EventDetailActivity.class);
-        startActivity(intent);
-    }
 
 
 }

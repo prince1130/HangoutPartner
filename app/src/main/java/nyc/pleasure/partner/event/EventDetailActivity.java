@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import nyc.pleasure.partner.OptionsMenuUtility;
 import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.auth.AuthActivity;
@@ -50,13 +51,13 @@ public class EventDetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_account) {
-            viewAccount();
+            OptionsMenuUtility.viewMyProfile(this);
             return true;
         } else if(id == R.id.action_message) {
-            viewMessage();
+            OptionsMenuUtility.viewMyMessage(this);
             return true;
         } else if(id == R.id.action_logout) {
-            doLogout();
+            OptionsMenuUtility.doLogout(this);
             return true;
         }
 
@@ -66,28 +67,6 @@ public class EventDetailActivity extends AppCompatActivity {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void viewAccount() {
-        Intent intent = new Intent(this, ProfileUpdateActivity.class);
-        if(intent.resolveActivity(this.getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
-
-    private void viewMessage() {
-        Intent intent = new Intent(this, ChatActivity.class);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
-
-    private void doLogout() {
-        /// Need to destroy preference saved earlier.
-        PreferenceUtility.clearPreference(this);
-        Intent intent = new Intent(this, AuthActivity.class);
-        if(intent.resolveActivity(this.getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 
 
 }
