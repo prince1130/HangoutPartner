@@ -1,4 +1,4 @@
-package nyc.pleasure.hangoutpartneralpha;
+package nyc.pleasure.partner;
 
 import org.junit.Test;
 

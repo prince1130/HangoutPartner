@@ -15,11 +15,11 @@
     <string name="twitter_consumer_key">XhhrAN47txqsFoAzFOwjSVyxH</string>
     <string name="twitter_consumer_secret">0RQQWaB4QmIb6Hxfr6gHhew7nbl1XK21M486HEEabrM4alpIMl</string>
 
-    <string name="preference_file_key">nyc.pleasure.hangout</string>
+    <string name="preference_file_key">nyc.pleasure.partner</string>
     <string name="preference_user_id">UserId</string>
     <string name="preference_display_name">UserDisplayName</string>
 
-    <string name="content_authority">nyc.pleasure.hangoutpartneralpha</string>
+    <string name="content_authority">nyc.pleasure.partner</string>
     <string name="sync_account_type">nyc.pleasure</string>
 
     <string name="congnito_pool_id">us-east-1:7797ed75-2c6d-426a-b2a6-5d48cd74f5fb</string>

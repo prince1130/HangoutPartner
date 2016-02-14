@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nyc.pleasure.hangoutpartneralpha">
+    package="nyc.pleasure.partner">
 
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,14 +22,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MainApplication"
+        android:name="nyc.pleasure.partner.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="nyc.pleasure.partner.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -39,46 +39,46 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".chat.ChatActivity"
+            android:name="nyc.pleasure.partner.chat.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="nyc.pleasure.partner.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nyc.pleasure.hangoutpartneralpha.MainActivity" />
+                android:value="nyc.pleasure.partner.MainActivity" />
         </activity>
         <activity
-            android:name=".auth.AuthActivity"
+            android:name="nyc.pleasure.partner.auth.AuthActivity"
             android:label="HangoutPartner Authentication" />
         <activity android:name="com.facebook.FacebookActivity" />
-        <activity android:name=".auth.TwitterOAuthActivity" />
+        <activity android:name="nyc.pleasure.partner.auth.TwitterOAuthActivity" />
         <activity
-            android:name=".event.EventBrowseActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name="nyc.pleasure.partner.event.EventBrowseActivity"
+            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
         <activity
-            android:name=".event.EventCreateActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name="nyc.pleasure.partner.event.EventCreateActivity"
+            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
         <activity
-            android:name=".event.EventDetailActivity"
-            android:parentActivityName=".event.EventBrowseActivity" />
+            android:name="nyc.pleasure.partner.event.EventDetailActivity"
+            android:parentActivityName="nyc.pleasure.partner.event.EventBrowseActivity" />
         <activity
-            android:name=".AccountActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MediaUploadActivity" />
+            android:name="nyc.pleasure.partner.AccountActivity"
+            android:parentActivityName="nyc.pleasure.partner.MainActivity" />
+        <activity android:name="nyc.pleasure.partner.MediaUploadActivity" />
 
         <activity
-            android:name=".profile.ProfileBrowseActivity"
+            android:name="nyc.pleasure.partner.profile.ProfileBrowseActivity"
             android:label="@string/title_activity_profile_browse"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
-            android:name=".data.EventProvider"
+            android:name="nyc.pleasure.partner.data.EventProvider"
             android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true" />
 
         <!-- SyncAdapter's dummy authentication service -->
-        <service android:name=".sync.HangoutAuthenticatorService">
+        <service android:name="nyc.pleasure.partner.sync.HangoutAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -90,7 +90,7 @@
 
         <!-- The SyncAdapter service -->
         <service
-            android:name=".sync.HangoutSyncService"
+            android:name="nyc.pleasure.partner.sync.HangoutSyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />

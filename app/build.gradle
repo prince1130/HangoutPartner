@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "nyc.pleasure.hangoutpartneralpha"
+        applicationId "nyc.pleasure.partner"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
