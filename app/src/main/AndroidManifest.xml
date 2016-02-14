@@ -62,7 +62,7 @@
             android:name="nyc.pleasure.partner.event.EventDetailActivity"
             android:parentActivityName="nyc.pleasure.partner.event.EventBrowseActivity" />
         <activity
-            android:name="nyc.pleasure.partner.AccountActivity"
+            android:name=".profile.ProfileUpdateActivity"
             android:parentActivityName="nyc.pleasure.partner.MainActivity" />
         <activity android:name="nyc.pleasure.partner.MediaUploadActivity" />
 

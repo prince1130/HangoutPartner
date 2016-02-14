@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import nyc.pleasure.partner.auth.AuthActivity;
 import nyc.pleasure.partner.chat.ChatActivity;
+import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 import nyc.pleasure.partner.sync.HangoutSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void viewAccount() {
-        Intent intent = new Intent(this, AccountActivity.class);
+        Intent intent = new Intent(this, ProfileUpdateActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         }

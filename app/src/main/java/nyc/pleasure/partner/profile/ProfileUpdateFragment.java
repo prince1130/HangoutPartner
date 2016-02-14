@@ -1,4 +1,4 @@
-package nyc.pleasure.partner;
+package nyc.pleasure.partner.profile;
 
 
 import android.app.DatePickerDialog;
@@ -24,6 +24,10 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Calendar;
 
+import nyc.pleasure.partner.MainActivity;
+import nyc.pleasure.partner.MediaUploadActivity;
+import nyc.pleasure.partner.R;
+import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.obj.User;
 
@@ -31,10 +35,10 @@ import nyc.pleasure.partner.obj.User;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment
+public class ProfileUpdateFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
-    public static final String LOG_TAG = AccountFragment.class.getSimpleName();
+    public static final String LOG_TAG = ProfileUpdateFragment.class.getSimpleName();
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    VIEW
@@ -96,7 +100,7 @@ public class AccountFragment extends Fragment
 ////    LIFECYCLE FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////
 
-    public AccountFragment() {
+    public ProfileUpdateFragment() {
         // Required empty public constructor
     }
 
@@ -113,7 +117,7 @@ public class AccountFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_account, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile_update, container, false);
         viewHolderRef = new ViewHolder(rootView);
 //        rootView.setTag(viewHolderRef);
 

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import nyc.pleasure.partner.AccountActivity;
+import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.Utility;
 import nyc.pleasure.partner.auth.AuthActivity;
@@ -71,7 +71,7 @@ public class EventBrowseActivity extends AppCompatActivity
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void viewAccount() {
-        Intent intent = new Intent(this, AccountActivity.class);
+        Intent intent = new Intent(this, ProfileUpdateActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         }
