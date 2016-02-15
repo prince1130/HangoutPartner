@@ -1,7 +1,9 @@
 package nyc.pleasure.partner.obj;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Chien on 12/21/2015.
@@ -26,6 +28,8 @@ public class User {
     private List<String> photos = new ArrayList<String>();
     private List<String> videos = new ArrayList<String>();
     private List<String> feedback = new ArrayList<String>();
+
+    private Map<String, String> chatMessages = new HashMap<String, String>(); // Key is counter party user id. Value is the MessageBucket ID.
 
     public String getDisplayName() {
         return displayName;
@@ -115,4 +119,15 @@ public class User {
     public void setDescriptionIdealPartner(String descriptionIdealPartner) {
         this.descriptionIdealPartner = descriptionIdealPartner;
     }
+
+    public Map<String, String> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(Map<String, String> chatMessages) {
+        this.chatMessages = chatMessages;
+    }
+
+
+    
 }

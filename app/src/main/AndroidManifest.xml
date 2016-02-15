@@ -38,20 +38,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".chat.ChatActivity"
-            android:label="@string/title_activity_chat"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nyc.pleasure.partner.MainActivity" />
-        </activity>
+
+        <!-- AUTHENTICATION ACTIVITY  -->
         <activity
             android:name=".auth.AuthActivity"
             android:label="HangoutPartner Authentication" />
         <activity android:name="com.facebook.FacebookActivity" />
         <activity android:name=".auth.TwitterOAuthActivity" />
+
+        <!-- EVENT ACTIVITY  -->
         <activity
             android:name=".event.EventBrowseActivity"
             android:parentActivityName=".MainActivity" />
@@ -61,6 +56,8 @@
         <activity
             android:name=".event.EventDetailActivity"
             android:parentActivityName=".event.EventBrowseActivity" />
+
+        <!-- PROFILE ACTIVITY  -->
         <activity
             android:name=".profile.ProfileUpdateActivity"
             android:parentActivityName=".MainActivity" />
@@ -73,7 +70,21 @@
             android:name=".MediaUploadActivity"
             android:parentActivityName=".profile.ProfileUpdateActivity" />
 
-        <activity android:name=".message.MessageBrowseActivity"></activity>
+        <!-- MESSAGE ACTIVITY  -->
+        <activity
+            android:name=".chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nyc.pleasure.partner.MainActivity" />
+        </activity>
+        <activity android:name=".message.MessageBrowseActivity" />
+        <activity android:name=".message.MessageDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- END OF ACTIVITY  -->
 
         <provider
             android:name=".data.EventProvider"
@@ -119,6 +130,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBQoIl0920c3xGQcVEytxCtlKx-eLIEnWM" />
+
 
     </application>
 

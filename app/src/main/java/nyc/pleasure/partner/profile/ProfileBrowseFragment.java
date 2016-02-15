@@ -24,6 +24,7 @@ import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.chat.ChatActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
+import nyc.pleasure.partner.message.MessageDetailActivity;
 import nyc.pleasure.partner.obj.User;
 
 /**
@@ -189,7 +190,6 @@ public class ProfileBrowseFragment extends Fragment {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void browseMedia() {
-        PreferenceUtility.setSelectedUserId(this.getContext(), selectedUserId);
         Intent mediaIntent = new Intent(this.getActivity(), MediaUploadActivity.class);
         if (mediaIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(mediaIntent);
@@ -197,8 +197,7 @@ public class ProfileBrowseFragment extends Fragment {
     }
 
     private void sendMessage() {
-        PreferenceUtility.setLoggedInUserId(this.getContext(), selectedUserId);
-        Intent messageIntent = new Intent(this.getActivity(), ChatActivity.class);
+        Intent messageIntent = new Intent(this.getActivity(), MessageDetailActivity.class);
         if (messageIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(messageIntent);
         }
