@@ -1,6 +1,7 @@
 package nyc.pleasure.partner.message;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +14,8 @@ import nyc.pleasure.partner.auth.AuthActivity;
 import nyc.pleasure.partner.chat.ChatActivity;
 import nyc.pleasure.partner.profile.ProfileUpdateActivity;
 
-public class MessageBrowseActivity extends AppCompatActivity {
+public class MessageBrowseActivity extends AppCompatActivity
+    implements  MessageBrowseFragment.Callback, MessageBrowseFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +65,26 @@ public class MessageBrowseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// CLICK ACTION FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+////    CALLBACK FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+
+    public void onFragmentInteraction(Uri uri) {
+        Intent intent = new Intent(this, MessageDetailActivity.class).setData(uri);
+        startActivity(intent);
+    }
+
+    public void onItemSelected(String msgBucketId) {
+        PreferenceUtility.setSelectedMsgBucketId(this, msgBucketId);
+        Intent intent = new Intent(this, MessageDetailActivity.class);
+        startActivity(intent);
+    }
 
 
 

@@ -63,6 +63,20 @@ public class PreferenceUtility {
     }
 
 
+    public static String getSelectedMsgBucketId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String defaultValue = null;
+        return sharedPref.getString(context.getString(R.string.preference_selected_msg), defaultValue);
+    }
+
+    public static void setSelectedMsgBucketId(Context context, String msgBucketId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(R.string.preference_selected_msg), msgBucketId);
+        editor.commit();
+    }
+
+
     public static void clearPreference(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

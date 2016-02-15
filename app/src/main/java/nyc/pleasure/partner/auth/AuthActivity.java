@@ -639,7 +639,7 @@ public class AuthActivity extends AppCompatActivity implements
     public void loginWithPassword() {
         mAuthProgressDialog.show();
 //        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
-        mFirebaseRef.authWithPassword("test2@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword("test3@firebaseuser.com", "test1234", new AuthResultHandler("password"));
     }
 
     /* ************************************

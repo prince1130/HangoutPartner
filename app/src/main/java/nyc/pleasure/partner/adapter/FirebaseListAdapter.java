@@ -22,10 +22,10 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
 
     private Query mRef;
     private Class<T> mModelClass;
-    private int mLayout;
-    private LayoutInflater mInflater;
+    protected int mLayout;
+    protected LayoutInflater mInflater;
     private List<T> mModels;
-    private List<String> mKeys;
+    protected List<String> mKeys;
     private ChildEventListener mListener;
 
 

@@ -52,7 +52,6 @@ public class MessageDetailFragment extends Fragment {
 /////////////////////////////////////////////////////////////////////////////////////
     /* A reference to the Firebase */
     private FirebaseUtility mFirebaseUtility;
-    private Firebase mFirebaseUserRef = null;
     private Firebase mFirebaseMsgRef = null; // Point to the Message Bucket that contains all messages for these 2 members.
     private ChatListAdapter mChatListAdapter;
 
@@ -74,8 +73,9 @@ public class MessageDetailFragment extends Fragment {
 
         myUserId = PreferenceUtility.getLoggedInUserId(this.getContext());
         theirUserId = PreferenceUtility.getSelectedUserId(this.getContext());
+        msgBucketId = PreferenceUtility.getSelectedMsgBucketId(this.getContext());
         mFirebaseUtility = FirebaseUtility.getInstance(getResources());
-        mFirebaseUserRef = mFirebaseUtility.getUserReference().child(myUserId);
+        mFirebaseMsgRef = mFirebaseUtility.getMessageReference().child(msgBucketId);
 
     }
 
@@ -107,47 +107,6 @@ public class MessageDetailFragment extends Fragment {
         });
 
 
-        getMessageBucketId();
-
-        return rootView;
-    }
-
-
-    private void getMessageBucketId() {
-
-        mFirebaseUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                msgBucketId = null; // Make sure there is no value stored before we go retrieve it.
-                Log.d(LOG_TAG, "onDataChange. Rebuild UI with latest data. " + dataSnapshot.toString());
-                User currentUser = dataSnapshot.getValue(User.class);
-                if (currentUser != null) { //// This user was found.
-                    Map<String, String> messageMap = currentUser.getChatMessages();
-                    if(messageMap != null) {
-                        msgBucketId = messageMap.get(theirUserId);
-                    }
-
-                }
-                if(msgBucketId == null) {
-                    msgBucketId = "" + System.currentTimeMillis();
-                    addFirebaseMsgBucketId(msgBucketId);
-                }
-
-                initalizeView(msgBucketId);
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-    }
-
-    private void initalizeView(String messageBucketId) {
-        mFirebaseMsgRef = mFirebaseUtility.getMessageReference().child(messageBucketId);
-
         mChatListAdapter = new ChatListAdapter(mFirebaseMsgRef.limit(50), this.getActivity(), R.layout.list_item_chat, myUserId);
 
         viewHolderRef.mListView.setAdapter(mChatListAdapter);
@@ -159,16 +118,21 @@ public class MessageDetailFragment extends Fragment {
             }
         });
 
+        return rootView;
     }
 
 
-    private void addFirebaseMsgBucketId(String messageBucketId) {
+
+
+
+    private void addMsgBucketIdToUser() {
         /// Insert to Both Users on sending and receiving sides..
-        mFirebaseUtility.getUserReference().child(myUserId).child("chatMessages").child(theirUserId).setValue(messageBucketId);
-        mFirebaseUtility.getUserReference().child(theirUserId).child("chatMessages").child(myUserId).setValue(messageBucketId);
+        mFirebaseUtility.getUserReference().child(myUserId).child("chatMessages").child(theirUserId).setValue(msgBucketId);
+        mFirebaseUtility.getUserReference().child(theirUserId).child("chatMessages").child(myUserId).setValue(msgBucketId);
     }
 
     private void sendMessage() {
+        addMsgBucketIdToUser();
         EditText inputText = (EditText) this.getActivity().findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {

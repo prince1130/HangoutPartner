@@ -80,9 +80,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nyc.pleasure.partner.MainActivity" />
         </activity>
-        <activity android:name=".message.MessageBrowseActivity" />
+        <activity android:name=".message.MessageBrowseActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".message.MessageDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".message.MessageBrowseActivity"></activity>
 
         <!-- END OF ACTIVITY  -->
 

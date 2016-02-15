@@ -15,8 +15,11 @@ public class MessageDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_detail);
+/*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_message);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        */
 /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_message);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -27,7 +30,7 @@ public class MessageDetailActivity extends AppCompatActivity {
             }
         });
         */
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
     }
 }

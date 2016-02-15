@@ -18,6 +18,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Map;
+
 import nyc.pleasure.partner.MediaUploadActivity;
 import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
@@ -74,7 +76,9 @@ public class ProfileBrowseFragment extends Fragment {
 
     /* A reference to the Firebase */
     private Firebase mFirebaseUserRef;
+    private String myUserId;
     private String selectedUserId;
+    private String selectedMsgBucketId;
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////    LIFECYCLE FUNCTIONS
@@ -89,13 +93,9 @@ public class ProfileBrowseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent =  getActivity().getIntent();
-        Uri data = intent.getData();
-         //// Before comes here. the source Activity have to let us know the id with    Intent intent = new Intent(this, ProfileBrowseActivity.class).putExtra("selectedProfileId", userId);
+        myUserId = PreferenceUtility.getLoggedInUserId(this.getContext());
         selectedUserId = PreferenceUtility.getSelectedUserId(this.getContext());
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(selectedUserId);
-
     }
 
     @Override
@@ -137,6 +137,7 @@ public class ProfileBrowseFragment extends Fragment {
                 User currentUser = dataSnapshot.getValue(User.class);
                 if (currentUser != null) { //// This user was found.
                     updateView(viewHolderRef, currentUser);
+                    processMsgBucketId(currentUser);
                 } else { //// No such user stored.
 
                 }
@@ -197,6 +198,7 @@ public class ProfileBrowseFragment extends Fragment {
     }
 
     private void sendMessage() {
+        PreferenceUtility.setSelectedMsgBucketId(this.getContext(), selectedMsgBucketId);
         Intent messageIntent = new Intent(this.getActivity(), MessageDetailActivity.class);
         if (messageIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(messageIntent);
@@ -219,11 +221,25 @@ public class ProfileBrowseFragment extends Fragment {
 ////    HELPER FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////
 
-    private void updateView(ViewHolder viewHolder, User user) {
-        viewHolder.editTextDisplayName.setText(user.getDisplayName());
-        viewHolder.editTextGender.setText(user.getGender());
-        viewHolder.editTextDescriptionMe.setText(user.getDescriptionMe());
-        viewHolder.textViewAcctId.setText(user.getUserId());
+    private void updateView(ViewHolder viewHolder, User selectedUser) {
+        viewHolder.editTextDisplayName.setText(selectedUser.getDisplayName());
+        viewHolder.editTextGender.setText(selectedUser.getGender());
+        viewHolder.editTextDescriptionMe.setText(selectedUser.getDescriptionMe());
+        viewHolder.textViewAcctId.setText(selectedUser.getUserId());
+    }
+
+    private void processMsgBucketId(User selectedUser) {
+        selectedMsgBucketId = null;
+        if(myUserId == selectedUserId) {
+            return;
+        }
+        Map<String, String> msgBucketIdMap = selectedUser.getChatMessages();
+        if(msgBucketIdMap != null) {
+            selectedMsgBucketId = msgBucketIdMap.get(myUserId);
+        }
+        if(selectedMsgBucketId == null) {
+            selectedMsgBucketId = "" + System.currentTimeMillis();
+        }
     }
 
 
