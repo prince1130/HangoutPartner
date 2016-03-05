@@ -20,10 +20,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
-import nyc.pleasure.partner.MediaUploadActivity;
 import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
-import nyc.pleasure.partner.chat.ChatActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
 import nyc.pleasure.partner.message.MessageDetailActivity;

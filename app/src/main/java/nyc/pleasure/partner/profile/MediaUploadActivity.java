@@ -1,4 +1,4 @@
-package nyc.pleasure.partner;
+package nyc.pleasure.partner.profile;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -8,14 +8,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,9 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -36,12 +32,13 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nyc.pleasure.partner.PreferenceUtility;
+import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.s3.UtilityS3;
 
 public class MediaUploadActivity extends ListActivity {

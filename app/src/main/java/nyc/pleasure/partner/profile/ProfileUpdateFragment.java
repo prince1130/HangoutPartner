@@ -25,7 +25,6 @@ import com.firebase.client.ValueEventListener;
 import java.util.Calendar;
 
 import nyc.pleasure.partner.MainActivity;
-import nyc.pleasure.partner.MediaUploadActivity;
 import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.firebase.FirebaseUtility;

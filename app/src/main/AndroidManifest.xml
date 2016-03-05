@@ -67,7 +67,7 @@
             android:parentActivityName=".event.EventDetailActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MediaUploadActivity"
+            android:name=".profile.MediaUploadActivity"
             android:parentActivityName=".profile.ProfileUpdateActivity" />
 
         <!-- MESSAGE ACTIVITY  -->
