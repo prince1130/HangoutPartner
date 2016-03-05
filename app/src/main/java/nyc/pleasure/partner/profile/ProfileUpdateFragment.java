@@ -109,6 +109,7 @@ public class ProfileUpdateFragment extends Fragment
         super.onCreate(savedInstanceState);
         // Setup our Firebase mFirebaseRef
         String mUserId = PreferenceUtility.getLoggedInUserId(this.getContext());
+        PreferenceUtility.setSelectedUserId(this.getContext(), mUserId);
         mFirebaseUserRef = FirebaseUtility.getInstance(getResources()).getUserReference().child(mUserId);
     }
 
