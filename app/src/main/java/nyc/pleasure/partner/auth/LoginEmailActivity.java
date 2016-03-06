@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,10 +27,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
+import nyc.pleasure.partner.obj.User;
 
 
 /**
@@ -37,13 +48,6 @@ import nyc.pleasure.partner.R;
  */
 public class LoginEmailActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -54,6 +58,10 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    /* A reference to the Firebase */
+    private static Firebase mFirebaseRef;
+    private static final String LOG_TAG = LoginEmailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +94,10 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        String FIREBASE_URL = getResources().getString(R.string.firebase_url);
+        mFirebaseRef = new Firebase(FIREBASE_URL);
+
     }
 
     private void populateAutoComplete() {
@@ -151,7 +163,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.execute(email, password);
         }
     }
 
@@ -162,7 +174,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 7;
     }
 
     /**
@@ -259,7 +271,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
@@ -270,22 +282,15 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(String... params) {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                String email = params[0];
+                String password = params[1];
+                mFirebaseRef.authWithPassword(email, password, new AuthResultHandler("password"));
+            } catch (Exception e) {
                 return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
             }
 
             // TODO: register the new account here.
@@ -294,11 +299,12 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            // This sucess boolean is base on the boolean return from the validation result at doInBackground();
             mAuthTask = null;
-            showProgress(false);
+//            showProgress(false);
 
             if (success) {
-                finish();
+//                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -308,8 +314,110 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
+//            showProgress(false);
         }
     }
+
+
+
+    private class AuthResultHandler implements Firebase.AuthResultHandler {
+
+        private final String provider;
+
+        public AuthResultHandler(String provider) {
+            this.provider = provider;
+        }
+
+        @Override
+        public void onAuthenticated(AuthData authData) {
+//            mAuthProgressDialog.hide();
+            Log.i(LOG_TAG, provider + " auth successful");
+            setAuthenticatedUser(authData);
+
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("provider", authData.getProvider());
+            if(authData.getProviderData().containsKey("displayName")) {
+                map.put("displayName", authData.getProviderData().get("displayName").toString());
+            }
+            mFirebaseRef.child("user_access").child(authData.getUid()).setValue(map);
+
+            showProgress(false);
+            finish();
+        }
+
+        @Override
+        public void onAuthenticationError(FirebaseError firebaseError) {
+//            mAuthProgressDialog.hide();
+//            showErrorDialog(firebaseError.toString());
+            showProgress(false);
+
+            switch (firebaseError.getCode()) {
+                case FirebaseError.USER_DOES_NOT_EXIST:
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    break;
+                case FirebaseError.INVALID_EMAIL:
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    break;
+                case FirebaseError.INVALID_PASSWORD:
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    break;
+                default:
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    break;
+            }
+
+        }
+
+    }
+
+    private void setAuthenticatedUser(AuthData authData) {
+        String userId = null;
+
+        if (authData != null) {
+            userId = authData.getUid();
+            if(userId != null) {
+                Log.i(LOG_TAG, "Logged in as " + userId + " (" + authData.getProvider() + ")");
+            }
+        } else {
+            Log.i(LOG_TAG, "AuthData is set to null ");
+        }
+        PreferenceUtility.setLoggedInUserId(this, userId);
+        prepareUserDisplayName(userId);
+    }
+
+    private void prepareUserDisplayName(String userId) {
+        if(userId != null) {
+            mFirebaseRef.child("user").child(userId).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User currentUser = dataSnapshot.getValue(User.class);
+                            if (currentUser != null) {
+                                setUserDisplayName(currentUser.getDisplayName());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {}
+                    }
+            );
+        } else {
+            setUserDisplayName("");
+        }
+    }
+    private void setUserDisplayName(String displayName) {
+        PreferenceUtility.setLoggedInUserDisplayName(this, displayName);
+    }
+
+
+    private void logout() {
+        /* logout of Firebase */
+        mFirebaseRef.unauth();
+        setAuthenticatedUser(null);
+        finish();
+    }
+
+
 }
 
