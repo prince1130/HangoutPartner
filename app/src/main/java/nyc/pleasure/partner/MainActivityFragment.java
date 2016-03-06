@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import nyc.pleasure.partner.auth.AuthActivity;
+import nyc.pleasure.partner.auth.LoginEmailActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.event.EventCreateActivity;
 
@@ -130,7 +131,7 @@ public class MainActivityFragment extends Fragment {
 */
 
     private void doLogin() {
-        Intent intent = new Intent(this.getActivity(), AuthActivity.class);
+        Intent intent = new Intent(this.getActivity(), LoginEmailActivity.class);
         if(intent.resolveActivity(this.getActivity().getPackageManager()) != null) {
             startActivity(intent);
         }

@@ -77,6 +77,30 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/section_dev"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
+        <Button
+            android:id="@+id/login_dev"
+            android:text="DEV"
+            android:layout_width="200dp"
+            android:layout_height="100dp" />
+        <Button
+            android:id="@+id/login_qa"
+            android:text="QA"
+            android:layout_width="200dp"
+            android:layout_height="100dp" />
+        <Button
+            android:id="@+id/login_int"
+            android:text="INT"
+            android:layout_width="200dp"
+            android:layout_height="100dp" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

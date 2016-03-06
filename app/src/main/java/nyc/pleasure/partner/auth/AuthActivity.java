@@ -121,6 +121,13 @@ public class AuthActivity extends AppCompatActivity implements
     private Button mAnonymousLoginButton;
 
     /* *************************************
+     *            DEV TEST LOGIN              *
+     ***************************************/
+    private Button mDevLoginButton;
+    private Button mQaLoginButton;
+    private Button mIntLoginButton;
+
+    /* *************************************
      *            LOGOUT              *
      ***************************************/
     private LinearLayout mLogoutSection;
@@ -209,6 +216,34 @@ public class AuthActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 loginAnonymously();
+            }
+        });
+
+    /* *************************************
+     *            DEV TEST LOGIN              *
+     ***************************************/
+        mDevLoginButton  = (Button) findViewById(R.id.login_dev);
+        mQaLoginButton = (Button) findViewById(R.id.login_qa);
+        mIntLoginButton = (Button) findViewById(R.id.login_int);
+
+        mDevLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithDev(0);
+            }
+        });
+
+        mQaLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithDev(1);
+            }
+        });
+
+        mIntLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithDev(2);
             }
         });
 
@@ -389,6 +424,11 @@ public class AuthActivity extends AppCompatActivity implements
             mTwitterLoginButton.setVisibility(View.GONE);
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
+
+            mDevLoginButton.setVisibility(View.GONE);
+            mQaLoginButton.setVisibility(View.GONE);
+            mIntLoginButton.setVisibility(View.GONE);
+
             mLogoutSection.setVisibility(View.VISIBLE);
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
 
@@ -414,6 +454,11 @@ public class AuthActivity extends AppCompatActivity implements
             mTwitterLoginButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
+
+            mDevLoginButton.setVisibility(View.VISIBLE);
+            mQaLoginButton.setVisibility(View.VISIBLE);
+            mIntLoginButton.setVisibility(View.VISIBLE);
+
             mLogoutSection.setVisibility(View.GONE);
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
@@ -638,8 +683,7 @@ public class AuthActivity extends AppCompatActivity implements
      */
     public void loginWithPassword() {
         mAuthProgressDialog.show();
-//        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
-        mFirebaseRef.authWithPassword("test3@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
     }
 
     /* ************************************
@@ -651,6 +695,17 @@ public class AuthActivity extends AppCompatActivity implements
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
     }
 
+    public void loginWithDev(int option) {
+        mAuthProgressDialog.show();
+        switch (option) {
+            case 0: mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+                break;
+            case 1: mFirebaseRef.authWithPassword("test2@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+                break;
+            default: mFirebaseRef.authWithPassword("test3@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+                break;
+        }
+    }
 
     private void logoutConfirm() {
         logout();
