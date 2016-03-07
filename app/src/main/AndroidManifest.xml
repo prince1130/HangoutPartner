@@ -49,10 +49,17 @@
             android:label="HangoutPartner Authentication" />
         <activity android:name="com.facebook.FacebookActivity" />
         <activity android:name=".auth.TwitterOAuthActivity" />
-
         <activity
             android:name=".auth.LoginEmailActivity"
             android:label="@string/title_activity_login_email"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nyc.pleasure.partner.MainActivity" />
+        </activity>
+        <activity
+            android:name=".auth.EmailRegisterActivity"
+            android:label="@string/title_activity_email_register"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

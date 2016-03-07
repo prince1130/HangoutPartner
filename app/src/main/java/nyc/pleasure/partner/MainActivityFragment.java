@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import nyc.pleasure.partner.auth.AuthActivity;
+import nyc.pleasure.partner.auth.EmailRegisterActivity;
 import nyc.pleasure.partner.auth.LoginEmailActivity;
 import nyc.pleasure.partner.event.EventBrowseActivity;
 import nyc.pleasure.partner.event.EventCreateActivity;
@@ -25,15 +26,14 @@ public class MainActivityFragment extends Fragment {
     public static class ViewHolder {
         public final TextView textViewLoginStatus;
         public final TextView textViewLogin;
+        public final TextView textViewRegister;
         public final TextView textViewEventBrowse;
-//        public final TextView textViewEventCreate;
-
 
         public ViewHolder(View view) {
             textViewLoginStatus = (TextView) view.findViewById(R.id.login_status);
             textViewLogin = (TextView) view.findViewById(R.id.text_view_login);
+            textViewRegister = (TextView) view.findViewById(R.id.text_view_register);
             textViewEventBrowse = (TextView) view.findViewById(R.id.text_view_event_browse);
-//            textViewEventCreate = (TextView) view.findViewById(R.id.text_view_event_create);
         }
     }
 
@@ -56,6 +56,15 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 doLogin();
+            }
+        });
+
+
+        viewHolderRef.textViewRegister.setText("Register");
+        viewHolderRef.textViewRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doRegister();
             }
         });
 
@@ -103,14 +112,14 @@ public class MainActivityFragment extends Fragment {
             // NOT LOGIN YET.
             viewHolderRef.textViewLoginStatus.setText("Connect with others through Interesting Events. Login to start the Fun. ");
             viewHolderRef.textViewLogin.setVisibility(View.VISIBLE);
+            viewHolderRef.textViewRegister.setVisibility(View.VISIBLE);
             viewHolderRef.textViewEventBrowse.setVisibility(View.GONE);
-//            viewHolderRef.textViewEventCreate.setVisibility(View.GONE);
         } else {
             // Use easy to read DISPLAY NAME instead of ID.
             viewHolderRef.textViewLoginStatus.setText("Welcome back " + userDisplayName + " !");
             viewHolderRef.textViewLogin.setVisibility(View.GONE);
+            viewHolderRef.textViewRegister.setVisibility(View.GONE);
             viewHolderRef.textViewEventBrowse.setVisibility(View.VISIBLE);
-//            viewHolderRef.textViewEventCreate.setVisibility(View.VISIBLE);
         }
 
         super.onStart();
@@ -137,6 +146,13 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
+    private void doRegister() {
+        Intent intent = new Intent(this.getActivity(), EmailRegisterActivity.class);
+        if(intent.resolveActivity(this.getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
     private void browseEvent() {
         Intent intent = new Intent(this.getActivity(), EventBrowseActivity.class);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -144,11 +160,5 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
-    private void createEvent() {
-        Intent intent = new Intent(this.getActivity(), EventCreateActivity.class);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 
 }

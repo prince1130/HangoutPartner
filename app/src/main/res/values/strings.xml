@@ -36,17 +36,23 @@
     <string name="refreshing">Refreshing</string>
     <string name="please_wait">Please wait</string>
     <string name="title_activity_profile_browse">ProfileBrowseActivity</string>
-    <string name="title_activity_login_email">Login Email</string>
+    <string name="title_activity_login_email">Returned user login</string>
+    <string name="title_activity_email_register">New User</string>
 
     <!-- Strings related to login -->
+    <string name="prompt_login">Use previous registered email/password to login.</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (At least 7 characters)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_password_confirm">Confirm Password again</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_register">Register</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_password_confirm">Password inconsistent. Check again.</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_email_taken">This email address is taken already</string>
+    <string name="error_others">Internal Error. Try again later.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

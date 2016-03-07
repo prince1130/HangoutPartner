@@ -29,27 +29,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nyc.pleasure.partner.MainActivity;
-import nyc.pleasure.partner.PreferenceUtility;
 import nyc.pleasure.partner.R;
 import nyc.pleasure.partner.firebase.FirebaseUtility;
-import nyc.pleasure.partner.obj.User;
 
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginEmailActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class EmailRegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -59,17 +55,18 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mPasswordConfirmView;
     private View mProgressView;
     private View mLoginFormView;
 
     /* A reference to the Firebase */
     private static Firebase mFirebaseRef;
-    private static final String LOG_TAG = LoginEmailActivity.class.getSimpleName();
+    private static final String LOG_TAG = EmailRegisterActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_email);
+        setContentView(R.layout.activity_email_register);
         setupActionBar();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -80,7 +77,19 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegister();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mPasswordConfirmView =  (EditText) findViewById(R.id.password_confirm);
+        mPasswordConfirmView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptRegister();
                     return true;
                 }
                 return false;
@@ -91,7 +100,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptRegister();
             }
         });
 
@@ -99,7 +108,6 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         mProgressView = findViewById(R.id.login_progress);
 
         mFirebaseRef = FirebaseUtility.getInstance(this.getResources()).getRootReference();
-
     }
 
     private void populateAutoComplete() {
@@ -122,7 +130,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }
@@ -130,10 +138,12 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mPasswordConfirmView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -142,6 +152,10 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
+            cancel = true;
+        } else if(passwordConfirm == null || !passwordConfirm.equals(password)) {
+            mPasswordConfirmView.setError(getString(R.string.error_password_confirm));
+            focusView = mPasswordConfirmView;
             cancel = true;
         }
 
@@ -207,11 +221,13 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
+
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+
         }
     }
 
@@ -252,7 +268,7 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginEmailActivity.this,
+                new ArrayAdapter<>(EmailRegisterActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -288,7 +304,8 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
             // TODO: attempt authentication against a network service.
 
             try {
-                mFirebaseRef.authWithPassword(mEmail, mPassword, new AuthResultHandler("password"));
+                // Simulate network access.          Thread.sleep(2000);
+                mFirebaseRef.createUser(mEmail, mPassword, new CreateResultHandler("password"));
             } catch (Exception e) {
                 return false;
             }
@@ -299,7 +316,6 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            // This sucess boolean is base on the boolean return from the validation result at doInBackground();
             mAuthTask = null;
 //            showProgress(false);
 
@@ -319,51 +335,39 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
     }
 
 
-
-    private class AuthResultHandler implements Firebase.AuthResultHandler {
+    private class CreateResultHandler implements Firebase.ResultHandler {
 
         private final String provider;
 
-        public AuthResultHandler(String provider) {
+        public CreateResultHandler(String provider) {
             this.provider = provider;
         }
 
         @Override
-        public void onAuthenticated(AuthData authData) {
+        public void onSuccess() {
 //            mAuthProgressDialog.hide();
-            Log.i(LOG_TAG, provider + " auth successful");
-            setAuthenticatedUser(authData);
-
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("provider", authData.getProvider());
-            if(authData.getProviderData().containsKey("displayName")) {
-                map.put("displayName", authData.getProviderData().get("displayName").toString());
-            }
-            mFirebaseRef.child("user_access").child(authData.getUid()).setValue(map);
-
+            Log.i(LOG_TAG, provider + "User created successful. Check email for next step.");
             showProgress(false);
-            goBackToMain();
+            doLogin();
+//            finish();
         }
 
         @Override
-        public void onAuthenticationError(FirebaseError firebaseError) {
-//            mAuthProgressDialog.hide();
-//            showErrorDialog(firebaseError.toString());
+        public void onError(FirebaseError firebaseError) {
             showProgress(false);
 
             switch (firebaseError.getCode()) {
-                case FirebaseError.USER_DOES_NOT_EXIST:
-                    mEmailView.setError(getString(R.string.error_invalid_email));
-                    break;
                 case FirebaseError.INVALID_EMAIL:
                     mEmailView.setError(getString(R.string.error_invalid_email));
                     break;
                 case FirebaseError.INVALID_PASSWORD:
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
                     break;
+                case FirebaseError.EMAIL_TAKEN:
+                    mEmailView.setError(getString(R.string.error_email_taken));
+                    break;
                 default:
                     mEmailView.setError(getString(R.string.error_others));
-                    mPasswordView.setError(getString(R.string.error_others));
                     break;
             }
 
@@ -371,56 +375,11 @@ public class LoginEmailActivity extends AppCompatActivity implements LoaderCallb
 
     }
 
-    private void setAuthenticatedUser(AuthData authData) {
-        String userId = null;
-
-        if (authData != null) {
-            userId = authData.getUid();
-            if(userId != null) {
-                Log.i(LOG_TAG, "Logged in as " + userId + " (" + authData.getProvider() + ")");
-            }
-        } else {
-            Log.i(LOG_TAG, "AuthData is set to null ");
+    private void doLogin() {
+        Intent intent = new Intent(this, LoginEmailActivity.class);
+        if(intent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(intent);
         }
-        PreferenceUtility.setLoggedInUserId(this, userId);
-        prepareUserDisplayName(userId);
-    }
-
-    private void prepareUserDisplayName(String userId) {
-        if(userId != null) {
-            mFirebaseRef.child("user").child(userId).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User currentUser = dataSnapshot.getValue(User.class);
-                            if (currentUser != null) {
-                                setUserDisplayName(currentUser.getDisplayName());
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {}
-                    }
-            );
-        } else {
-            setUserDisplayName("");
-        }
-    }
-    private void setUserDisplayName(String displayName) {
-        PreferenceUtility.setLoggedInUserDisplayName(this, displayName);
-    }
-
-
-    private void logout() {
-        /* logout of Firebase */
-        mFirebaseRef.unauth();
-        setAuthenticatedUser(null);
-        goBackToMain();
-    }
-
-    private void goBackToMain() {
-        Intent afterAuthenticatedIntent = new Intent(this, MainActivity.class);
-        startActivity(afterAuthenticatedIntent);
     }
 
 }
